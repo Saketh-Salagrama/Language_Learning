@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bolo – Walk into a language</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1c1021">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--ink:#1c1021;--plum:#3a1a33;--marigold:#f4b03d;--ember:#e0602f;--silk:#f6e3c4;--clay:#b9795a;--leaf:#6f8f5a;--card:rgba(28,16,33,.72);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#1c1021;--silk:#f6e3c4}}
+:root[data-theme="dark"]{--ink:#1c1021;--silk:#f6e3c4}
+*{box-sizing:border-box;margin:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--ink);color:var(--silk);font:400 17px/1.6 "DM Sans",system-ui,sans-serif;overflow-x:hidden}
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+header{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:calc(18px + env(safe-area-inset-top,0px)) 5vw 18px}
+.logo{font:700 28px "Fraunces",Georgia,serif;letter-spacing:.01em}
+.logo i{color:var(--marigold);font-style:normal}
+.btn{display:inline-block;border:0;cursor:pointer;background:var(--marigold);color:var(--ink);font:700 16px "DM Sans",sans-serif;padding:14px 26px;border-radius:40px;text-decoration:none;transition:transform .2s,background .2s}
+.btn:hover{transform:translateY(-2px) rotate(-1deg);background:#ffc45c}
+.btn:focus-visible,.tab:focus-visible,.line:focus-visible{outline:3px solid var(--silk);outline-offset:3px}
+main{position:relative;z-index:2}
+section{min-height:100vh;padding:14vh 6vw;display:flex;flex-direction:column;justify-content:center}
+.hero{min-height:112vh;justify-content:flex-start;padding-top:24vh}
+h1,h2{font-family:"Fraunces",Georgia,serif;font-weight:700;line-height:1.02;text-shadow:0 4px 40px rgba(20,8,24,.6)}
+h1{font-size:clamp(46px,9vw,128px);max-width:11ch}
+h2{font-size:clamp(34px,5.4vw,74px);max-width:14ch;margin-bottom:22px}
+.lead{max-width:46ch;font-size:clamp(18px,1.6vw,22px);margin:26px 0 34px;text-shadow:0 2px 18px rgba(20,8,24,.8)}
+.right{align-items:flex-end;text-align:right}
+.right h2,.right .lead{margin-left:auto}
+.panel{background:var(--card);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(246,227,196,.16);border-radius:28px;padding:26px;max-width:560px;width:100%;text-align:left}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tab{cursor:pointer;border:1px solid rgba(246,227,196,.3);background:transparent;color:var(--silk);padding:7px 16px;border-radius:30px;font:500 15px "DM Sans",sans-serif}
+.tab[aria-pressed=true]{background:var(--silk);color:var(--ink)}
+.line{display:block;width:100%;text-align:left;cursor:pointer;border:0;color:var(--ink);background:var(--silk);margin:10px 0;padding:14px 18px;border-radius:22px 22px 22px 4px;font:500 20px/1.35 "Noto Sans Devanagari","Noto Sans Tamil","Noto Sans Telugu","Noto Sans Kannada",sans-serif}
+.line.you{background:var(--marigold);border-radius:22px 22px 4px 22px;margin-left:12%;width:88%}
+.line small{display:block;font:400 14px "DM Sans",sans-serif;margin-top:6px;max-height:0;opacity:0;overflow:hidden;transition:.35s}
+.line.open small{max-height:80px;opacity:.85}
+.hint{font-size:14px;opacity:.7;margin-top:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;max-width:1100px;margin-top:20px}
+.way{background:var(--card);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(246,227,196,.14);padding:24px;border-radius:26px 8px 26px 8px;transition:transform .3s}
+.way:nth-child(even){border-radius:8px 26px 8px 26px}
+.way:hover{transform:translateY(-6px)}
+.way b{font:700 23px "Fraunces",serif;display:block;margin:6px 0}
+.way span{font-size:32px}
+.way p{font-size:15.5px;opacity:.88}
+.scen{display:flex;flex-wrap:wrap;gap:12px;max-width:900px;margin-top:10px}
+.scen span{background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:12px 20px;border-radius:30px;border:1px solid rgba(244,176,61,.45);font-weight:500}
+.scen span:nth-child(3n){border-color:rgba(224,96,47,.6)}
+.scen span:nth-child(3n+1){border-color:rgba(111,143,90,.7)}
+.langs{display:flex;flex-wrap:wrap;gap:14px;max-width:1000px;margin:18px 0 36px}
+.langs div{background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:14px 22px;border-radius:20px;font:500 24px "Noto Sans Devanagari","Noto Sans Tamil","Noto Sans Telugu","Noto Sans Kannada","Noto Sans Malayalam","Noto Sans Gujarati",sans-serif}
+.langs small{display:block;font:400 13px "DM Sans",sans-serif;opacity:.7}
+.cue{position:fixed;bottom:calc(22px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:5;font-size:14px;opacity:.8;transition:opacity .5s}
+footer{position:relative;z-index:2;text-align:center;padding:30px 6vw 40px;font-size:14px;opacity:.7}
+@media (max-width:700px){.right{align-items:flex-start;text-align:left}.right h2,.right .lead{margin-left:0}section{padding:14vh 5vw}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.tab{font-family:"DM Sans","Noto Sans Devanagari","Noto Sans Tamil","Noto Sans Telugu","Noto Sans Kannada","Noto Sans Malayalam","Noto Sans Gujarati",sans-serif}.tab:disabled{opacity:.35;cursor:not-allowed}.line small{font-family:"DM Sans","Noto Sans Devanagari","Noto Sans Tamil","Noto Sans Telugu","Noto Sans Kannada","Noto Sans Malayalam","Noto Sans Gujarati",sans-serif}.line small em{font-style:normal;opacity:.7}
+.line{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;cursor:pointer;color:var(--ink);background:var(--silk);margin:10px 0;padding:14px 16px 14px 18px;border-radius:22px 22px 22px 4px;font:500 20px/1.35 "Noto Sans Devanagari","Noto Sans Tamil","Noto Sans Telugu","Noto Sans Kannada","Noto Sans Malayalam","Noto Sans Gujarati","DM Sans",sans-serif}
+.line.you{background:var(--marigold);border-radius:22px 22px 4px 22px;margin-left:10%;width:90%}
+.line .act{display:flex;gap:6px;flex:none}.act button{border:0;cursor:pointer;background:rgba(28,16,33,.12);border-radius:50%;width:38px;height:38px;font-size:17px}.act button:hover{background:rgba(28,16,33,.25)}
+.line.tip{background:transparent;border:1px dashed var(--marigold);color:var(--silk);font-size:15px;cursor:default}
+#toast{position:fixed;left:50%;bottom:70px;transform:translateX(-50%);z-index:9;background:var(--card);border:1px solid var(--marigold);padding:10px 18px;border-radius:20px;font-size:14px;max-width:90vw;text-align:center;opacity:0;pointer-events:none;transition:opacity .3s}#toast.on{opacity:1}
+.opt{display:block;width:100%;text-align:left;cursor:pointer;margin:8px 0;padding:12px 18px;border:2px solid var(--marigold);border-radius:20px;background:transparent;color:var(--silk);font:500 19px/1.35 "DM Sans","Noto Sans Devanagari","Noto Sans Tamil","Noto Sans Telugu","Noto Sans Kannada","Noto Sans Malayalam","Noto Sans Gujarati",sans-serif;transition:background .2s}.opt:hover{background:rgba(244,176,61,.18)}.opt small{display:block;font-size:14px;opacity:.75}
+.opt.ok{background:var(--leaf);border-color:var(--leaf)}.opt.bad{background:var(--ember);border-color:var(--ember)}.mem{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.card{min-height:84px;border:0;border-radius:16px;background:var(--plum);color:var(--silk);font:500 17px/1.25 "DM Sans","Noto Sans Devanagari","Noto Sans Tamil","Noto Sans Telugu","Noto Sans Kannada",sans-serif;cursor:pointer;padding:8px;transition:transform .25s,background .25s}.card.up{background:var(--silk);color:var(--ink);transform:rotateY(0)}.card.done{background:var(--leaf);color:var(--silk)}.bar{height:12px;border-radius:8px;background:rgba(246,227,196,.18);overflow:hidden;margin-bottom:12px}.bar i{display:block;height:100%;width:100%;background:var(--marigold)}
+#walk{position:fixed;inset:0;z-index:50;background:#1c1021}#wc{width:100%;height:100%;display:block}
+#whud{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));left:12px;right:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{background:var(--card);padding:7px 14px;border-radius:30px;font-size:14px;border:1px solid rgba(246,227,196,.2)}
+#whud .tab{background:var(--card)}
+#wprompt{position:absolute;left:50%;bottom:calc(150px + env(safe-area-inset-bottom,0px));transform:translateX(-50%)}
+#joy{display:none;position:absolute;left:24px;bottom:calc(28px + env(safe-area-inset-bottom,0px));width:130px;height:130px;border-radius:50%;background:rgba(246,227,196,.14);border:2px solid rgba(246,227,196,.4);touch-action:none}
+#joy i{position:absolute;width:50px;height:50px;left:40px;top:40px;border-radius:50%;background:var(--marigold);pointer-events:none}
+@media (pointer:coarse){#joy{display:block}}
+#npc{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);width:min(94vw,640px);max-height:70vh;overflow:auto;background:var(--card);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(246,227,196,.2);border-radius:26px;padding:18px}
+#shopbox{position:absolute;inset:0;overflow:auto;background:rgba(28,16,33,.94);padding:calc(14px + env(safe-area-inset-top,0px)) 4vw 40px}
+#shopbox .panel{margin:0 auto}
+.trace{display:block;width:min(100%,320px);aspect-ratio:1;margin:10px auto;background:rgba(246,227,196,.06);border:1px dashed rgba(246,227,196,.4);border-radius:20px;touch-action:none;cursor:crosshair}
+</style>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<header><div class="logo">Bolo<i>.</i></div><a class="btn" href="#join">Start talking</a></header>
+<div id="toast" role="status"></div>
+<div class="cue" id="cue">Scroll to walk down the street</div>
+<main>
+<section class="hero">
+<h1 id="h1">Don’t study a language. Walk into it.</h1>
+<p class="lead">Chat with the neighbour aunty, haggle at the vegetable market, sing along in the kitchen. Five languages today and more on the way, learned the way you actually use them.</p>
+<div><a class="btn" href="#talk">Meet the neighbours</a></div>
+</section>
+
+<section id="talk" class="right">
+<h2 class="rv">Just talk. No grammar.</h2>
+<p class="lead rv">Tell us your own language and the one you want, then pick a scene. Every lesson is explained in your mother tongue plus English, and if you are learning English, in your mother tongue alone. Try it below.</p>
+<button class="btn rv" id="walkbtn" style="margin-bottom:14px">🚶 Optional: walk the street</button>
+<div class="panel rv" style="max-width:640px">
+<p class="hint" style="margin:0 0 8px">I speak</p><div class="tabs" id="mt" role="group" aria-label="I speak"></div>
+<p class="hint" style="margin:0 0 8px">I want to learn</p><div class="tabs" id="tg" role="group" aria-label="I want to learn"></div>
+<p class="hint" style="margin:0 0 8px">I am (so words like madam or sir, and Hindi verbs, fit you)</p><div class="tabs" id="gd" role="group" aria-label="I am"></div>
+<p class="hint" style="margin:0 0 8px">Pick a scene</p><div class="tabs" id="sc" role="group" aria-label="Scene"></div>
+<p class="hint" style="margin:0 0 8px">Pick a way to practise</p><div class="tabs" id="md" role="group" aria-label="Mode"></div>
+<div id="chat" aria-live="polite"></div><div id="stage" hidden></div>
+<p class="hint" id="note"></p>
+</div>
+</section>
+
+<section>
+<h2 class="rv">Six ways in, none of them a quiz.</h2>
+<div class="grid">
+<div class="way rv"><span>🎲</span><b>Play</b><p>Funny word games: catch flying chai cups, win the bargain with the sabziwala.</p></div>
+<div class="way rv"><span>🎶</span><b>Sing</b><p>Learn from songs and lullabies. Lyrics light up as you sing along.</p></div>
+<div class="way rv"><span>🎙️</span><b>Speak</b><p>Say it, and get a gentle nudge on your pronunciation, never a red cross.</p></div>
+<div class="way rv"><span>👂</span><b>Listen</b><p>Tiny radio dramas set in homes, buses and weddings. Catch the gist first.</p></div>
+<div class="way rv"><span>✍️</span><b>Write and see</b><p>Trace letters with your finger as they bloom into pictures. Optional, always.</p></div>
+<div class="way rv"><span>🎭</span><b>Role-play</b><p>Step into a scene with a character who answers back, jokes and gets confused.</p></div>
+</div>
+</section>
+
+<section class="right">
+<h2 class="rv">Scenes from real life.</h2>
+<p class="lead rv">Every lesson is a place you will actually stand in.</p>
+<div class="scen rv" style="justify-content:flex-end">
+<span>Greeting the new neighbour</span><span>Vegetable market bargaining</span><span>Kitchen talk with the home-maker next door</span><span>Auto-rickshaw fare fight</span><span>Doctor’s waiting room</span><span>Festival invitation</span><span>Asking for directions</span><span>Parent–teacher meeting</span>
+</div>
+</section>
+
+<section>
+<h2 class="rv">Five languages. One street.</h2>
+<div class="langs rv" id="langs"></div><p class="lead rv">Malayalam, Marathi, Gujarati and Sanskrit arrive after native-speaker review.</p>
+</section>
+
+<section id="join" style="align-items:center;text-align:center">
+<h2 class="rv" style="max-width:16ch">Your neighbours are waiting outside.</h2>
+<p class="lead rv">Pick a language and say your first sentence in under two minutes.</p>
+<a class="btn rv" href="#talk">Say namaste</a>
+</section>
+</main>
+<footer>Bolo is a concept prototype. Voices use your browser’s built-in speech.</footer>
+
+<div id="walk" hidden>
+<canvas id="wc"></canvas>
+<div id="whud"><button class="tab" id="wexit">✕ Back to page</button><button class="tab" id="wgreet">👩 Greetings: on</button><span class="pill" id="wcount">Chats: 0</span><span class="pill">Arrows or WASD · E to enter</span></div>
+<button class="btn" id="wprompt" hidden></button>
+<div id="joy" aria-label="Walking joystick"><i></i></div>
+<div id="npc" hidden></div>
+<div id="shopbox" hidden><button class="tab" id="wback" style="position:sticky;top:0;margin-bottom:12px">← Back to the street</button></div>
+</div>
+<script src="vendor/three.min.js"></script>
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script>
+/* ---------- Talk Mode: same scene, any mother tongue to any target ---------- */
+const NAMES={English:"English",Hindi:"हिन्दी",Tamil:"தமிழ்",Telugu:"తెలుగు",Kannada:"ಕನ್ನಡ"};
+const VC={English:"en-IN",Hindi:"hi-IN",Tamil:"ta-IN",Telugu:"te-IN",Kannada:"kn-IN"};
+const L=["English","Hindi","Tamil","Telugu","Kannada"];
+/* phrase bank: [English, Hindi, Tamil, Telugu, Kannada, Malayalam, Sanskrit, Marathi, Gujarati] */
+const P={
+t1:["Hello aunty, how are you?","नमस्ते आंटी, कैसी हैं आप?","வணக்கம் ஆன்ட்டி, எப்படி இருக்கீங்க?","నమస్కారం ఆంటీ, ఎలా ఉన్నారు?","ನಮಸ್ಕಾರ ಆಂಟಿ, ಹೇಗಿದ್ದೀರಾ?"],
+t2:["I’m fine. Have you had tea?","मैं ठीक हूँ। आपने चाय पी?","நான் நல்லா இருக்கேன். டீ குடிச்சீங்களா?","నేను బాగున్నాను. టీ తాగారా?","ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ. ಚಹಾ ಕುಡಿದ್ರಾ?"],
+t3:["Not yet.","अभी नहीं।","இன்னும் இல்லை.","ఇంకా లేదు.","ಇನ್ನೂ ಇಲ್ಲ."],
+t4:["Come, sit. Let’s have tea together.","आइए, बैठिए। साथ में चाय पीते हैं।","வாங்க, உட்காருங்க. சேர்ந்து டீ குடிக்கலாம்.","రండి, కూర్చోండి. కలిసి టీ తాగుదాం.","ಬನ್ನಿ, ಕೂತುಕೊಳ್ಳಿ. ಒಟ್ಟಿಗೆ ಚಹಾ ಕುಡಿಯೋಣ."],
+t5:["Thank you, aunty. The tea is very good.","धन्यवाद आंटी। चाय बहुत अच्छी है।","நன்றி ஆன்ட்டி. டீ ரொம்ப நல்லா இருக்கு.","ధన్యవాదాలు ఆంటీ. టీ చాలా బాగుంది.","ಧನ್ಯವಾದ ಆಂಟಿ. ಚಹಾ ತುಂಬಾ ಚೆನ್ನಾಗಿದೆ."],
+m1:["Tomatoes! Fresh tomatoes!","टमाटर! ताज़े टमाटर!","தக்காளி! புதுசு தக்காளி!","టమాటాలు! తాజా టమాటాలు!","ಟೊಮೇಟೊ! ತಾಜಾ ಟೊಮೇಟೊ!"],
+m2:["How much is one kilo?","एक किलो कितने का है?","ஒரு கிலோ எவ்வளவு?","ఒక కిలో ఎంత?","ಒಂದು ಕಿಲೋ ಎಷ್ಟು?"],
+m3:["Forty rupees, madam.","चालीस रुपये, मैडम।","நாற்பது ரூபாய், மேடம்.","నలభై రూపాయలు, మేడం.","ನಲವತ್ತು ರೂಪಾಯಿ, ಮೇಡಂ."],
+m4:["Too expensive! Thirty?","बहुत महँगा! तीस में दो?","ரொம்ப அதிகம்! முப்பதுக்கு தாங்க?","చాలా ఎక్కువ! ముప్పైకి ఇవ్వండి?","ತುಂಬಾ ಜಾಸ್ತಿ! ಮೂವತ್ತಕ್ಕೆ ಕೊಡಿ?"],
+m5:["Okay, thirty-five. Last price!","ठीक है, पैंतीस। आख़िरी भाव!","சரி, முப்பத்தைந்து. கடைசி விலை!","సరే, ముప్పై ఐదు. చివరి ధర!","ಸರಿ, ಮೂವತ್ತೈದು. ಕೊನೆಯ ಬೆಲೆ!"],
+m6:["Deal! Give me one kilo.","ठीक है! एक किलो दे दीजिए।","சரி! ஒரு கிலோ கொடுங்க.","సరే! ఒక కిలో ఇవ్వండి.","ಸರಿ! ಒಂದು ಕಿಲೋ ಕೊಡಿ."],
+w1:["I love your hat!","मुझे आपकी टोपी बहुत पसंद है!","உங்க தொப்பி எனக்கு ரொம்ப பிடிச்சிருக்கு!","మీ టోపీ నాకు చాలా నచ్చింది!","ನಿಮ್ಮ ಟೋಪಿ ನನಗೆ ತುಂಬಾ ಇಷ್ಟ!"],
+w1r:["Hat? I sell tomatoes, not hats!","टोपी? मैं टमाटर बेचता हूँ, टोपी नहीं!","தொப்பியா? நான் தக்காளி விக்கிறேன், தொப்பி இல்லை!","టోపీనా? నేను టమాటాలు అమ్ముతాను, టోపీలు కాదు!","ಟೋಪಿಯಾ? ನಾನು ಟೊಮೇಟೊ ಮಾರುತ್ತೇನೆ, ಟೋಪಿ ಅಲ್ಲ!"],
+w2:["Give me a thousand kilos!","मुझे हज़ार किलो दे दो!","எனக்கு ஆயிரம் கிலோ கொடுங்க!","నాకు వెయ్యి కిలోలు ఇవ్వండి!","ನನಗೆ ಸಾವಿರ ಕಿಲೋ ಕೊಡಿ!"],
+w2r:["A thousand? Let me call a lorry!","हज़ार? मैं ट्रक बुलाता हूँ!","ஆயிரமா? நான் லாரியை கூப்பிடறேன்!","వెయ్యా? నేను లారీని పిలుస్తాను!","ಸಾವಿರವೇ? ನಾನು ಲಾರಿ ಕರೆಯುತ್ತೇನೆ!"],
+e1:["Good morning","सुप्रभात","காலை வணக்கம்","శుభోదయం","ಶುಭೋದಯ"],
+e2:["Good night","शुभ रात्रि","இனிய இரவு","శుభ రాత్రి","ಶುಭ ರಾತ್ರಿ"],
+e3:["Thank you","धन्यवाद","நன்றி","ధన్యవాదాలు","ಧನ್ಯವಾದಗಳು"],
+e4:["Please","कृपया","தயவுசெய்து","దయచేసి","ದಯವಿಟ್ಟು"],
+e5:["Sorry","माफ़ कीजिए","மன்னிச்சிடுங்க","క్షమించండి","ಕ್ಷಮಿಸಿ"],
+e6:["Yes","हाँ","ஆமாம்","అవును","ಹೌದು"],
+e7:["No","नहीं","இல்லை","కాదు","ಇಲ್ಲ"],
+e8:["Water, please","पानी दीजिए","தண்ணீர் கொடுங்க","నీళ్లు ఇవ్వండి","ನೀರು ಕೊಡಿ"],
+e9:["What is your name?","आपका नाम क्या है?","உங்க பேர் என்ன?","మీ పేరు ఏమిటి?","ನಿಮ್ಮ ಹೆಸರೇನು?"],
+e10:["My name is Ravi.","मेरा नाम रवि है।","என் பேர் ரவி.","నా పేరు రవి.","ನನ್ನ ಹೆಸರು ರವಿ."],
+e11:["I don’t understand.","मुझे समझ नहीं आया।","எனக்கு புரியலை.","నాకు అర్థం కాలేదు.","ನನಗೆ ಅರ್ಥವಾಗಲಿಲ್ಲ."],
+e12:["Please speak slowly.","कृपया धीरे बोलिए।","கொஞ்சம் மெதுவா பேசுங்க.","దయచేసి నెమ్మదిగా మాట్లాడండి.","ದಯವಿಟ್ಟು ನಿಧಾನವಾಗಿ ಮಾತನಾಡಿ."],
+e13:["Where is the bus stop?","बस स्टॉप कहाँ है?","பஸ் ஸ்டாப் எங்கே இருக்கு?","బస్ స్టాప్ ఎక్కడ ఉంది?","ಬಸ್ ನಿಲ್ದಾಣ ಎಲ್ಲಿದೆ?"],
+e14:["Wait a minute.","एक मिनट रुकिए।","ஒரு நிமிஷம் இருங்க.","ఒక్క నిమిషం ఆగండి.","ಒಂದು ನಿಮಿಷ ಇರಿ."],
+e15:["See you tomorrow.","कल मिलते हैं।","நாளைக்கு பார்க்கலாம்.","రేపు కలుద్దాం.","ನಾಳೆ ಸಿಗೋಣ."],
+e16:["Welcome!","स्वागत है!","வாங்க!","స్వాగతం!","ಸ್ವಾಗತ!"],
+e17:["I am hungry.","मुझे भूख लगी है।","எனக்கு பசிக்குது.","నాకు ఆకలిగా ఉంది.","ನನಗೆ ಹಸಿವಾಗಿದೆ."],
+e18:["The food is delicious.","खाना बहुत स्वादिष्ट है।","சாப்பாடு ரொம்ப சுவையா இருக்கு.","భోజనం చాలా రుచిగా ఉంది.","ಊಟ ತುಂಬಾ ರುಚಿಯಾಗಿದೆ."],
+e19:["Is anyone at home?","घर में कोई है?","வீட்ல யாராவது இருக்கீங்களா?","ఇంట్లో ఎవరైనా ఉన్నారా?","ಮನೆಯಲ್ಲಿ ಯಾರಾದರೂ ಇದ್ದೀರಾ?"],
+e20:["Take care.","अपना ख्याल रखिए।","பார்த்து இருங்க.","జాగ్రత్తగా ఉండండి.","ಜಾಗ್ರತೆಯಾಗಿರಿ."],
+n1:["One","एक","ஒன்று","ఒకటి","ಒಂದು"],
+n2:["Two","दो","இரண்டு","రెండు","ಎರಡು"],
+n3:["Three","तीन","மூன்று","మూడు","ಮೂರು"],
+n4:["Four","चार","நான்கு","నాలుగు","ನಾಲ್ಕು"],
+n5:["Five","पाँच","ஐந்து","ఐదు","ಐದು"],
+n6:["Six","छह","ஆறு","ఆరు","ಆರು"],
+n7:["Seven","सात","ஏழு","ఏడు","ಏಳು"],
+n8:["Eight","आठ","எட்டு","ఎనిమిది","ಎಂಟು"],
+n9:["Nine","नौ","ஒன்பது","తొమ్మిది","ಒಂಬತ್ತು"],
+n10:["Ten","दस","பத்து","పది","ಹತ್ತು"],
+k1:["What are you cooking today?","आज क्या बना रही हैं?","இன்னைக்கு என்ன சமைக்கிறீங்க?","ఈ రోజు ఏం వండుతున్నారు?","ಇವತ್ತು ಏನು ಅಡುಗೆ ಮಾಡ್ತಿದ್ದೀರಾ?"],
+k2:["I am making sambar and rice.","मैं सांभर और चावल बना रही हूँ।","நான் சாம்பார் சாதம் செய்றேன்.","నేను సాంబార్ అన్నం చేస్తున్నాను.","ನಾನು ಸಾಂಬಾರ್ ಅನ್ನ ಮಾಡ್ತಿದ್ದೇನೆ."],
+k3:["It smells so good!","बहुत अच्छी खुशबू आ रही है!","வாசனை ரொம்ப நல்லா இருக்கு!","చాలా మంచి వాసన వస్తోంది!","ತುಂಬಾ ಒಳ್ಳೆಯ ವಾಸನೆ ಬರ್ತಿದೆ!"],
+k4:["Can you give me the recipe?","क्या आप मुझे रेसिपी बताएँगी?","எனக்கு ரெசிபி சொல்லித் தருவீங்களா?","నాకు రెసిపీ చెప్తారా?","ನನಗೆ ರೆಸಿಪಿ ಹೇಳ್ತೀರಾ?"],
+k5:["Of course! First, boil the dal.","ज़रूर! पहले दाल उबालिए।","கண்டிப்பா! முதல்ல பருப்பை வேக வைங்க.","తప్పకుండా! ముందు పప్పు ఉడికించండి.","ಖಂಡಿತ! ಮೊದಲು ಬೇಳೆ ಬೇಯಿಸಿ."],
+k6:["How much salt should I add?","नमक कितना डालूँ?","உப்பு எவ்வளவு போடணும்?","ఉప్పు ఎంత వేయాలి?","ಉಪ್ಪು ಎಷ್ಟು ಹಾಕಬೇಕು?"],
+k7:["Just a little. Taste it first.","बस थोड़ा सा। पहले चखकर देखिए।","கொஞ்சம் தான். முதல்ல சுவைச்சு பாருங்க.","కొంచెం మాత్రమే. ముందు రుచి చూడండి.","ಸ್ವಲ್ಪ ಮಾತ್ರ. ಮೊದಲು ರುಚಿ ನೋಡಿ."],
+k8:["Thank you! I will cook it tomorrow.","धन्यवाद! मैं कल बनाऊँगी।","நன்றி! நான் நாளைக்கு செய்றேன்.","ధన్యవాదాలు! నేను రేపు వండుతాను.","ಧನ್ಯವಾದ! ನಾನು ನಾಳೆ ಮಾಡ್ತೇನೆ."],
+a1:["Auto! Are you free?","ऑटो! खाली है?","ஆட்டோ! காலியா இருக்கா?","ఆటో! ఖాళీగా ఉందా?","ಆಟೋ! ಖಾಲಿ ಇದೆಯಾ?"],
+a2:["Yes, madam. Where to?","हाँ मैडम। कहाँ जाना है?","ஆமாம் மேடம். எங்கே போகணும்?","అవును మేడం. ఎక్కడికి వెళ్లాలి?","ಹೌದು ಮೇಡಂ. ಎಲ್ಲಿಗೆ ಹೋಗಬೇಕು?"],
+a3:["To the railway station, please.","रेलवे स्टेशन चलिए।","ரயில்வே ஸ்டேஷனுக்கு போங்க.","రైల్వే స్టేషన్‌కి వెళ్లండి.","ರೈಲ್ವೆ ಸ್ಟೇಷನ್‌ಗೆ ಹೋಗಿ."],
+a4:["Two hundred rupees.","दो सौ रुपये।","இருநூறு ரூபாய்.","రెండు వందల రూపాయలు.","ಇನ್ನೂರು ರೂಪಾಯಿ."],
+a5:["Too much! Use the meter, please.","बहुत ज़्यादा! मीटर से चलिए।","ரொம்ப அதிகம்! மீட்டர் போடுங்க.","చాలా ఎక్కువ! మీటర్ వేయండి.","ತುಂಬಾ ಜಾಸ್ತಿ! ಮೀಟರ್ ಹಾಕಿ."],
+a6:["Okay, okay. Please sit.","ठीक है, ठीक है। बैठिए।","சரி சரி. உட்காருங்க.","సరే సరే. కూర్చోండి.","ಸರಿ ಸರಿ. ಕುಳಿತುಕೊಳ್ಳಿ."],
+a7:["Please go slowly.","धीरे चलाइए।","மெதுவா ஓட்டுங்க.","నెమ్మదిగా నడపండి.","ನಿಧಾನವಾಗಿ ಓಡಿಸಿ."],
+a8:["We have reached, madam.","हम पहुँच गए, मैडम।","வந்துட்டோம் மேடம்.","వచ్చేశాం మేడం.","ಬಂದುಬಿಟ್ಟೆವು ಮೇಡಂ."],
+x1:["I want to buy your auto!","मुझे आपका ऑटो खरीदना है!","எனக்கு உங்க ஆட்டோவை வாங்கணும்!","నాకు మీ ఆటో కొనాలి!","ನನಗೆ ನಿಮ್ಮ ಆಟೋ ಖರೀದಿಸಬೇಕು!"],
+x1r:["Buy my auto? Then who will drive?","मेरा ऑटो खरीदोगी? फिर चलाएगा कौन?","என் ஆட்டோவை வாங்கறீங்களா? அப்ப யார் ஓட்டுவா?","నా ఆటో కొంటారా? మరి ఎవరు నడుపుతారు?","ನನ್ನ ಆಟೋ ಖರೀದಿಸ್ತೀರಾ? ಮತ್ತೆ ಯಾರು ಓಡಿಸ್ತಾರೆ?"],
+x2:["I will pay you five thousand!","मैं आपको पाँच हज़ार दूँगी!","நான் உங்களுக்கு ஐயாயிரம் தரேன்!","నేను మీకు ఐదు వేలు ఇస్తాను!","ನಾನು ನಿಮಗೆ ಐದು ಸಾವಿರ ಕೊಡ್ತೇನೆ!"],
+x2r:["Five thousand? I will drive you to Goa!","पाँच हज़ार? मैं आपको गोवा तक ले चलता हूँ!","ஐயாயிரமா? கோவா வரைக்கும் கூட்டிட்டு போறேன்!","ఐదు వేలా? గోవా వరకు తీసుకెళ్తాను!","ಐದು ಸಾವಿರವೇ? ಗೋವಾವರೆಗೂ ಕರೆದುಕೊಂಡು ಹೋಗ್ತೇನೆ!"],
+d1:["Hello, how can I help you?","नमस्ते, मैं आपकी क्या मदद कर सकती हूँ?","வணக்கம், நான் எப்படி உதவலாம்?","నమస్కారం, నేను ఎలా సహాయం చేయగలను?","ನಮಸ್ಕಾರ, ನಾನು ಹೇಗೆ ಸಹಾಯ ಮಾಡಲಿ?"],
+d2:["I have had a fever since yesterday.","मुझे कल से बुखार है।","நேத்துல இருந்து எனக்கு காய்ச்சல்.","నాకు నిన్నటి నుంచి జ్వరం ఉంది.","ನನಗೆ ನಿನ್ನೆಯಿಂದ ಜ್ವರ ಇದೆ."],
+d3:["Please sit. The doctor will see you soon.","कृपया बैठिए। डॉक्टर जल्दी देखेंगे।","உட்காருங்க. டாக்டர் சீக்கிரம் பார்ப்பார்.","కూర్చోండి. డాక్టర్ త్వరలో చూస్తారు.","ಕುಳಿತುಕೊಳ್ಳಿ. ಡಾಕ್ಟರ್ ಬೇಗ ನೋಡ್ತಾರೆ."],
+d4:["How long do I have to wait?","मुझे कितनी देर इंतज़ार करना होगा?","நான் எவ்வளவு நேரம் காத்திருக்கணும்?","నేను ఎంతసేపు వేచి ఉండాలి?","ನಾನು ಎಷ್ಟು ಹೊತ್ತು ಕಾಯಬೇಕು?"],
+d5:["About ten minutes.","लगभग दस मिनट।","கிட்டத்தட்ட பத்து நிமிஷம்.","సుమారు పది నిమిషాలు.","ಸುಮಾರು ಹತ್ತು ನಿಮಿಷ."],
+d6:["I also have a headache and a cough.","मुझे सिरदर्द और खाँसी भी है।","எனக்கு தலைவலியும் இருமலும் இருக்கு.","నాకు తలనొప్పి, దగ్గు కూడా ఉన్నాయి.","ನನಗೆ ತಲೆನೋವು ಮತ್ತು ಕೆಮ್ಮು ಕೂಡ ಇದೆ."],
+d7:["Take this medicine twice a day.","यह दवा दिन में दो बार लीजिए।","இந்த மருந்தை நாளைக்கு ரெண்டு தடவை சாப்பிடுங்க.","ఈ మందు రోజుకు రెండుసార్లు వేసుకోండి.","ಈ ಔಷಧಿಯನ್ನು ದಿನಕ್ಕೆ ಎರಡು ಬಾರಿ ತೆಗೆದುಕೊಳ್ಳಿ."],
+d8:["Thank you, doctor. Now I must rest.","धन्यवाद डॉक्टर। अब मुझे आराम करना है।","நன்றி டாக்டர். நான் ஓய்வு எடுக்கிறேன்.","ధన్యవాదాలు డాక్టర్. నేను విశ్రాంతి తీసుకుంటాను.","ಧನ್ಯವಾದ ಡಾಕ್ಟರ್. ನಾನು ವಿಶ್ರಾಂತಿ ತೆಗೆದುಕೊಳ್ಳುತ್ತೇನೆ."],
+y1:["My cat has a fever!","मेरी बिल्ली को बुखार है!","என் பூனைக்கு காய்ச்சல்!","నా పిల్లికి జ్వరం!","ನನ್ನ ಬೆಕ್ಕಿಗೆ ಜ್ವರ!"],
+y1r:["Then take the cat to the vet!","तो बिल्ली को जानवरों के डॉक्टर के पास ले जाइए!","அப்ப பூனையை மிருக டாக்டர் கிட்ட கூட்டிட்டு போங்க!","అయితే పిల్లిని పశువైద్యుని దగ్గరకు తీసుకెళ్లండి!","ಹಾಗಾದರೆ ಬೆಕ್ಕನ್ನು ಪಶುವೈದ್ಯರ ಬಳಿ ಕರೆದುಕೊಂಡು ಹೋಗಿ!"],
+y2:["Is this medicine sweet like a laddu?","क्या यह दवा लड्डू जैसी मीठी है?","இந்த மருந்து லட்டு மாதிரி இனிப்பா இருக்குமா?","ఈ మందు లడ్డూలా తీపిగా ఉంటుందా?","ಈ ಔಷಧಿ ಲಡ್ಡು ಹಾಗೆ ಸಿಹಿಯಾಗಿರುತ್ತಾ?"],
+y2r:["Sweet? No, it is very bitter!","मीठी? नहीं, यह बहुत कड़वी है!","இனிப்பா? இல்ல, இது ரொம்ப கசக்கும்!","తీపా? కాదు, ఇది చాలా చేదుగా ఉంటుంది!","ಸಿಹಿಯಾ? ಇಲ್ಲ, ಇದು ತುಂಬಾ ಕಹಿ!"],
+f1:["We have a festival at home on Sunday. Please come!","रविवार को हमारे घर त्योहार है। ज़रूर आइए!","ஞாயிற்றுக்கிழமை எங்க வீட்ல பண்டிகை. கண்டிப்பா வாங்க!","ఆదివారం మా ఇంట్లో పండుగ ఉంది. తప్పకుండా రండి!","ಭಾನುವಾರ ನಮ್ಮ ಮನೆಯಲ್ಲಿ ಹಬ್ಬ ಇದೆ. ಖಂಡಿತ ಬನ್ನಿ!"],
+f2:["Thank you! What time should we come?","धन्यवाद! हम कितने बजे आएँ?","நன்றி! நாங்க எத்தனை மணிக்கு வரணும்?","ధన్యవాదాలు! మేము ఎన్ని గంటలకు రావాలి?","ಧನ್ಯವಾದ! ನಾವು ಎಷ್ಟು ಗಂಟೆಗೆ ಬರಬೇಕು?"],
+f3:["Come at six in the evening.","शाम को छह बजे आइए।","சாயங்காலம் ஆறு மணிக்கு வாங்க.","సాయంత్రం ఆరు గంటలకు రండి.","ಸಂಜೆ ಆರು ಗಂಟೆಗೆ ಬನ್ನಿ."],
+f4:["Should we bring anything?","क्या हम कुछ लाएँ?","நாங்க ஏதாவது கொண்டு வரணுமா?","మేము ఏమైనా తీసుకురావాలా?","ನಾವು ಏನಾದರೂ ತರಬೇಕಾ?"],
+f5:["Just bring your smile!","बस अपनी मुस्कान लेकर आइए!","உங்க சிரிப்பை மட்டும் கொண்டு வாங்க!","మీ చిరునవ్వు ఒక్కటే తీసుకురండి!","ನಿಮ್ಮ ನಗುವನ್ನು ಮಾತ್ರ ತನ್ನಿ!"],
+f6:["Wonderful! We will be there.","बहुत अच्छा! हम ज़रूर आएँगे।","அருமை! நாங்க கண்டிப்பா வருவோம்.","చాలా బాగుంది! మేము తప్పకుండా వస్తాము.","ತುಂಬಾ ಚೆನ್ನಾಗಿದೆ! ನಾವು ಖಂಡಿತ ಬರ್ತೇವೆ."],
+f7:["Happy festival to you and your family!","आपको और आपके परिवार को त्योहार की शुभकामनाएँ!","உங்களுக்கும் உங்க குடும்பத்துக்கும் பண்டிகை வாழ்த்துகள்!","మీకు, మీ కుటుంబానికి పండుగ శుభాకాంక్షలు!","ನಿಮಗೂ ನಿಮ್ಮ ಕುಟುಂಬಕ್ಕೂ ಹಬ್ಬದ ಶುಭಾಶಯಗಳು!"],
+f8:["Same to you!","आपको भी!","உங்களுக்கும்!","మీకు కూడా!","ನಿಮಗೂ ಕೂಡ!"],
+z1:["We will come at midnight!","हम आधी रात को आएँगे!","நாங்க நடுராத்திரிக்கு வருவோம்!","మేము అర్ధరాత్రి వస్తాము!","ನಾವು ಮಧ್ಯರಾತ್ರಿ ಬರ್ತೇವೆ!"],
+z1r:["At midnight? The sweets will be gone!","आधी रात को? तब तक मिठाई ख़त्म हो जाएगी!","நடுராத்திரிக்கா? அதுக்குள்ள இனிப்பு தீர்ந்துடும்!","అర్ధరాత్రికా? అప్పటికి మిఠాయిలు అయిపోతాయి!","ಮಧ್ಯರಾತ್ರಿಯಾ? ಅಷ್ಟರಲ್ಲಿ ಸಿಹಿ ಖಾಲಿಯಾಗಿರುತ್ತೆ!"],
+z2:["Yes, we will bring five elephants!","हाँ, हम पाँच हाथी लाएँगे!","ஆமாம், நாங்க ஐந்து யானை கொண்டு வருவோம்!","అవును, మేము ఐదు ఏనుగులను తీసుకొస్తాము!","ಹೌದು, ನಾವು ಐದು ಆನೆಗಳನ್ನು ತರ್ತೇವೆ!"],
+z2r:["Elephants? My house is too small!","हाथी? मेरा घर बहुत छोटा है!","யானையா? என் வீடு ரொம்ப சின்னது!","ఏనుగులా? నా ఇల్లు చాలా చిన్నది!","ಆನೆಗಳಾ? ನನ್ನ ಮನೆ ತುಂಬಾ ಚಿಕ್ಕದು!"],
+t6:["Come again tomorrow!","कल फिर आइए!","நாளைக்கும் வாங்க!","రేపు కూడా రండి!","ನಾಳೆಯೂ ಬನ್ನಿ!"],
+t7:["Sure! We will come after lunch.","ज़रूर! हम खाने के बाद आएँगे।","கண்டிப்பா! சாப்பிட்டதும் வருவோம்.","తప్పకుండా! భోజనం తర్వాత వస్తాము.","ಖಂಡಿತ! ಊಟದ ನಂತರ ಬರ್ತೇವೆ."],
+t8:["Lovely. Say hello to your family.","बढ़िया। अपने परिवार को नमस्ते कहिए।","நல்லது. உங்க குடும்பத்துக்கு வணக்கம் சொல்லுங்க.","బాగుంది. మీ కుటుంబానికి నమస్కారం చెప్పండి.","ಒಳ್ಳೆಯದು. ನಿಮ್ಮ ಕುಟುಂಬಕ್ಕೆ ನಮಸ್ಕಾರ ಹೇಳಿ."],
+t9:["Of course. Goodbye, aunty!","ज़रूर। अलविदा आंटी!","கண்டிப்பா. போயிட்டு வரேன் ஆன்ட்டி!","తప్పకుండా. వెళ్లొస్తాను ఆంటీ!","ಖಂಡಿತ. ಹೋಗಿ ಬರ್ತೇನೆ ಆಂಟಿ!"],
+m7:["Anything else, madam?","और कुछ चाहिए, मैडम?","வேற ஏதாவது வேணுமா, மேடம்?","ఇంకా ఏమైనా కావాలా, మేడం?","ಇನ್ನೇನಾದರೂ ಬೇಕಾ, ಮೇಡಂ?"],
+m8:["Yes, half a kilo of onions, please.","हाँ, आधा किलो प्याज़ दीजिए।","ஆமாம், அரை கிலோ வெங்காயம் கொடுங்க.","అవును, అర కిలో ఉల్లిపాయలు ఇవ్వండి.","ಹೌದು, ಅರ್ಧ ಕಿಲೋ ಈರುಳ್ಳಿ ಕೊಡಿ."],
+m9:["Here you are. That is fifty rupees.","ये लीजिए। कुल पचास रुपये।","இந்தாங்க. மொத்தம் ஐம்பது ரூபாய்.","ఇదిగోండి. మొత్తం యాభై రూపాయలు.","ತಗೊಳ್ಳಿ. ಒಟ್ಟು ಐವತ್ತು ರೂಪಾಯಿ."],
+m10:["Thank you. Here is the money.","धन्यवाद। ये लीजिए पैसे।","நன்றி. இந்தாங்க பணம்.","ధన్యవాదాలు. ఇదిగోండి డబ్బులు.","ಧನ್ಯವಾದ. ತಗೊಳ್ಳಿ ದುಡ್ಡು."],
+k9:["Add a little ghee on top.","ऊपर से थोड़ा घी डालिए।","மேல கொஞ்சம் நெய் ஊத்துங்க.","పైన కొంచెం నెయ్యి వేయండి.","ಮೇಲೆ ಸ್ವಲ್ಪ ತುಪ್ಪ ಹಾಕಿ."],
+k10:["Should I make it spicy?","क्या इसे तीखा बनाऊँ?","காரமா செய்யட்டுமா?","కారంగా చేయమంటారా?","ಖಾರ ಮಾಡಲಾ?"],
+k11:["Only if your family likes spice.","अगर आपके घर में सबको तीखा पसंद हो तो।","உங்க வீட்ல எல்லாருக்கும் காரம் பிடிச்சா மட்டும்.","మీ ఇంట్లో అందరికీ కారం ఇష్టమైతేనే.","ನಿಮ್ಮ ಮನೆಯಲ್ಲಿ ಎಲ್ಲರಿಗೂ ಖಾರ ಇಷ್ಟ ಆದ್ರೆ ಮಾತ್ರ."],
+k12:["Perfect. I will tell you how it tasted!","बढ़िया! कैसा बना, मैं बताऊँगी!","சூப்பர்! எப்படி இருந்துச்சுன்னு சொல்றேன்!","బాగుంది! ఎలా ఉందో చెప్తాను!","ಸೂಪರ್! ಹೇಗಿತ್ತು ಅಂತ ಹೇಳ್ತೇನೆ!"],
+a9:["How much do I pay?","कितने पैसे हुए?","எவ்வளவு கொடுக்கணும்?","ఎంత ఇవ్వాలి?","ಎಷ್ಟು ಕೊಡಬೇಕು?"],
+a10:["One hundred and twenty rupees.","एक सौ बीस रुपये।","நூத்தி இருபது ரூபாய்.","నూట ఇరవై రూపాయలు.","ನೂರ ಇಪ್ಪತ್ತು ರೂಪಾಯಿ."],
+a11:["Here you are. Keep the change.","ये लीजिए। बाकी रख लीजिए।","இந்தாங்க. மீதியை வச்சுக்கோங்க.","ఇదిగోండి. మిగిలింది ఉంచుకోండి.","ತಗೊಳ್ಳಿ. ಉಳಿದದ್ದು ಇಟ್ಕೊಳ್ಳಿ."],
+a12:["Thank you, madam. Have a nice day!","धन्यवाद मैडम। आपका दिन शुभ हो!","நன்றி மேடம். இனிய நாளாக அமையட்டும்!","ధన్యవాదాలు మేడం. మీ రోజు బాగుండాలి!","ಧನ್ಯವಾದ ಮೇಡಂ. ನಿಮ್ಮ ದಿನ ಚೆನ್ನಾಗಿರಲಿ!"],
+d9:["Drink plenty of warm water.","खूब गरम पानी पीजिए।","நிறைய வெந்நீர் குடிங்க.","బాగా వేడి నీళ్లు తాగండి.","ಬಿಸಿ ನೀರು ಜಾಸ್ತಿ ಕುಡಿಯಿರಿ."],
+d10:["Can I eat normal food?","क्या सामान्य खाना खा सकते हैं?","நான் சாதாரண சாப்பாடு சாப்பிடலாமா?","నేను మామూలు భోజనం తినవచ్చా?","ನಾನು ಸಾಮಾನ್ಯ ಊಟ ಮಾಡಬಹುದಾ?"],
+d11:["Yes, but eat light food.","हाँ, लेकिन हल्का खाना खाइए।","ஆமாம், ஆனா லேசான சாப்பாடு சாப்பிடுங்க.","అవును, కానీ తేలికపాటి భోజనం తినండి.","ಹೌದು, ಆದರೆ ಹಗುರವಾದ ಊಟ ಮಾಡಿ."],
+d12:["When should I come again?","मुझे दोबारा कब आना है?","நான் மறுபடி எப்ப வரணும்?","నేను మళ్లీ ఎప్పుడు రావాలి?","ನಾನು ಮತ್ತೆ ಯಾವಾಗ ಬರಬೇಕು?"],
+f9:["Will your parents come too?","क्या आपके माता-पिता भी आएँगे?","உங்க அம்மா அப்பாவும் வருவாங்களா?","మీ అమ్మానాన్న కూడా వస్తారా?","ನಿಮ್ಮ ಅಪ್ಪ ಅಮ್ಮ ಕೂಡ ಬರ್ತಾರಾ?"],
+f10:["Yes, they are very excited!","हाँ, वे बहुत उत्साहित हैं!","ஆமாம், அவங்க ரொம்ப ஆர்வமா இருக்காங்க!","అవును, వాళ్లు చాలా ఉత్సాహంగా ఉన్నారు!","ಹೌದು, ಅವರು ತುಂಬಾ ಉತ್ಸಾಹದಲ್ಲಿದ್ದಾರೆ!"],
+f11:["Then the house will be full of joy.","तब घर खुशियों से भर जाएगा।","அப்ப வீடு முழுக்க சந்தோஷம் இருக்கும்.","అప్పుడు ఇల్లంతా సంతోషంతో నిండిపోతుంది.","ಹಾಗಾದರೆ ಮನೆ ತುಂಬಾ ಸಂತೋಷ ತುಂಬಿರುತ್ತೆ."],
+f12:["I cannot wait for the sweets!","मुझसे मिठाई का इंतज़ार नहीं हो रहा!","இனிப்புக்காக நான் காத்திருக்க முடியலை!","మిఠాయిల కోసం ఆగలేకపోతున్నాను!","ಸಿಹಿಗಾಗಿ ಕಾಯೋಕೆ ಆಗ್ತಿಲ್ಲ!"],
+e21:["Rice","चावल","அரிசி","బియ్యం","ಅಕ್ಕಿ"],
+e22:["Milk","दूध","பால்","పాలు","ಹಾಲು"],
+e23:["Tea","चाय","டீ","టీ","ಚಹಾ"],
+e24:["Bread","ब्रेड","ரொட்டி","బ్రెడ్","ಬ್ರೆಡ್"],
+e25:["Vegetables","सब्ज़ियाँ","காய்கறிகள்","కూరగాయలు","ತರಕಾರಿಗಳು"],
+e26:["Fruits","फल","பழங்கள்","పండ్లు","ಹಣ್ಣುಗಳು"],
+e27:["Sugar","चीनी","சர்க்கரை","చక్కెర","ಸಕ್ಕರೆ"],
+e28:["Salt","नमक","உப்பு","ఉప్పు","ಉಪ್ಪು"],
+e29:["Oil","तेल","எண்ணெய்","నూనె","ಎಣ್ಣೆ"],
+e30:["Eggs","अंडे","முட்டை","గుడ్లు","ಮೊಟ್ಟೆಗಳು"],
+t10:["How is your family?","आपके परिवार में सब कैसे हैं?","உங்க குடும்பத்துல எல்லாரும் எப்படி இருக்காங்க?","మీ కుటుంబంలో అందరూ ఎలా ఉన్నారు?","ನಿಮ್ಮ ಕುಟುಂಬದಲ್ಲಿ ಎಲ್ಲರೂ ಹೇಗಿದ್ದಾರೆ?"],
+t11:["Everyone is well, thank you.","सब ठीक हैं, धन्यवाद।","எல்லாரும் நல்லா இருக்காங்க, நன்றி.","అందరూ బాగున్నారు, ధన్యవాదాలు.","ಎಲ್ಲರೂ ಚೆನ್ನಾಗಿದ್ದಾರೆ, ಧನ್ಯವಾದ."],
+t12:["Do you want some biscuits too?","क्या आप बिस्कुट भी लेंगे?","பிஸ்கெட்டும் வேணுமா?","బిస్కెట్లు కూడా కావాలా?","ಬಿಸ್ಕತ್ತು ಕೂಡ ಬೇಕಾ?"],
+t13:["Yes, please. They look tasty.","हाँ, कृपया। ये स्वादिष्ट लग रहे हैं।","ஆமாம், கொடுங்க. சுவையா இருக்கும் போல.","అవును, ఇవ్వండి. రుచిగా ఉన్నట్టు ఉన్నాయి.","ಹೌದು, ಕೊಡಿ. ರುಚಿಯಾಗಿ ಕಾಣ್ತಿವೆ."],
+m11:["Fresh coriander for free, madam!","मैडम, ताज़ा धनिया मुफ़्त में!","மேடம், புது கொத்தமல்லி இலவசம்!","మేడం, తాజా కొత్తిమీర ఉచితం!","ಮೇಡಂ, ತಾಜಾ ಕೊತ್ತಂಬರಿ ಉಚಿತ!"],
+m12:["That is very kind of you.","यह आपकी बड़ी मेहरबानी है।","உங்க தயவுக்கு ரொம்ப நன்றி.","మీ దయకు చాలా ధన్యవాదాలు.","ನಿಮ್ಮ ದಯೆಗೆ ತುಂಬಾ ಧನ್ಯವಾದ."],
+m13:["Come again tomorrow. I will keep good tomatoes.","कल फिर आइए। मैं अच्छे टमाटर रखूँगा।","நாளைக்கும் வாங்க. நல்ல தக்காளி வச்சிருப்பேன்.","రేపు కూడా రండి. మంచి టమాటాలు ఉంచుతాను.","ನಾಳೆಯೂ ಬನ್ನಿ. ಒಳ್ಳೆಯ ಟೊಮೇಟೊ ಇಡ್ತೇನೆ."],
+m14:["Surely. Have a good day!","ज़रूर। आपका दिन अच्छा हो!","கண்டிப்பா. நல்ல நாளா அமையட்டும்!","తప్పకుండా. మీ రోజు బాగుండాలి!","ಖಂಡಿತ. ನಿಮ್ಮ ದಿನ ಚೆನ್ನಾಗಿರಲಿ!"],
+k13:["Do you have a pressure cooker?","क्या आपके पास प्रेशर कुकर है?","உங்ககிட்ட பிரஷர் குக்கர் இருக்கா?","మీ దగ్గర ప్రెషర్ కుక్కర్ ఉందా?","ನಿಮ್ಮ ಹತ್ತಿರ ಪ್ರೆಶರ್ ಕುಕ್ಕರ್ ಇದೆಯಾ?"],
+k14:["Yes, I use it every day.","हाँ, मैं इसे रोज़ इस्तेमाल करती हूँ।","ஆமாம், தினமும் பயன்படுத்துறேன்.","అవును, రోజూ వాడతాను.","ಹೌದು, ಪ್ರತಿದಿನ ಬಳಸ್ತೇನೆ."],
+k15:["It saves a lot of time.","इससे बहुत समय बचता है।","இதனால நிறைய நேரம் மிச்சமாகும்.","దీనితో చాలా సమయం ఆదా అవుతుంది.","ಇದರಿಂದ ತುಂಬಾ ಸಮಯ ಉಳಿಯುತ್ತೆ."],
+k16:["I should buy one too.","मुझे भी एक खरीदना चाहिए।","நானும் ஒண்ணு வாங்கணும்.","నేను కూడా ఒకటి కొనాలి.","ನಾನೂ ಒಂದು ಕೊಳ್ಳಬೇಕು."],
+a13:["Please wait here for a minute.","यहाँ एक मिनट रुकिए।","இங்க ஒரு நிமிஷம் இருங்க.","ఇక్కడ ఒక నిమిషం ఆగండి.","ಇಲ್ಲಿ ಒಂದು ನಿಮಿಷ ಇರಿ."],
+a14:["Okay, I will wait.","ठीक है, मैं रुकता हूँ।","சரி, காத்திருக்கேன்.","సరే, ఆగుతాను.","ಸರಿ, ಕಾಯ್ತೇನೆ."],
+a15:["Please turn left at the corner.","मोड़ पर बाएँ मुड़िए।","முனையில இடது பக்கம் திரும்புங்க.","మలుపు దగ్గర ఎడమవైపు తిరగండి.","ತಿರುವಿನಲ್ಲಿ ಎಡಕ್ಕೆ ತಿರುಗಿ."],
+a16:["Is this the right place, madam?","क्या यही सही जगह है, मैडम?","இதுதான் சரியான இடமா, மேடம்?","ఇదే సరైన చోటా, మేడం?","ಇದೇ ಸರಿಯಾದ ಜಾಗವಾ, ಮೇಡಂ?"],
+d13:["Come back after three days.","तीन दिन बाद फिर आइए।","மூணு நாள் கழிச்சு திரும்ப வாங்க.","మూడు రోజుల తర్వాత మళ్లీ రండి.","ಮೂರು ದಿನಗಳ ನಂತರ ಮತ್ತೆ ಬನ್ನಿ."],
+d14:["Where can I get this medicine?","यह दवा मुझे कहाँ मिलेगी?","இந்த மருந்து எனக்கு எங்கே கிடைக்கும்?","ఈ మందు నాకు ఎక్కడ దొరుకుతుంది?","ಈ ಔಷಧಿ ನನಗೆ ಎಲ್ಲಿ ಸಿಗುತ್ತೆ?"],
+d15:["At the pharmacy next door.","बगल वाली दवाई की दुकान में।","பக்கத்துல இருக்கிற மருந்துக் கடையில.","పక్కనే ఉన్న మందుల దుకాణంలో.","ಪಕ್ಕದ ಔಷಧಿ ಅಂಗಡಿಯಲ್ಲಿ."],
+d16:["Thank you. Please give me the bill.","धन्यवाद। कृपया बिल दीजिए।","நன்றி. பில் கொடுங்க.","ధన్యవాదాలు. బిల్లు ఇవ్వండి.","ಧನ್ಯವಾದ. ಬಿಲ್ ಕೊಡಿ."],
+f13:["We will make many sweets.","हम बहुत सारी मिठाइयाँ बनाएँगे।","நாங்க நிறைய இனிப்பு செய்வோம்.","మేము చాలా మిఠాయిలు చేస్తాము.","ನಾವು ತುಂಬಾ ಸಿಹಿ ಮಾಡ್ತೇವೆ."],
+f14:["Can I help you in the kitchen?","क्या मैं रसोई में आपकी मदद करूँ?","நான் சமையலறையில உதவி பண்ணட்டுமா?","నేను వంటగదిలో సహాయం చేయనా?","ನಾನು ಅಡುಗೆಮನೆಯಲ್ಲಿ ಸಹಾಯ ಮಾಡಲಾ?"],
+f15:["That would be wonderful.","यह तो बहुत अच्छा होगा।","அது ரொம்ப நல்லா இருக்கும்.","అది చాలా బాగుంటుంది.","ಅದು ತುಂಬಾ ಚೆನ್ನಾಗಿರುತ್ತೆ."],
+f16:["We will come an hour early.","हम एक घंटा पहले आ जाएँगे।","நாங்க ஒரு மணி நேரம் முன்னாடியே வருவோம்.","మేము ఒక గంట ముందే వస్తాము.","ನಾವು ಒಂದು ಗಂಟೆ ಮೊದಲೇ ಬರ್ತೇವೆ."],
+n11:["Eleven","ग्यारह","பதினொன்று","పదకొండు","ಹನ್ನೊಂದು"],
+n12:["Twelve","बारह","பன்னிரண்டு","పన్నెండు","ಹನ್ನೆರಡು"],
+n13:["Thirteen","तेरह","பதின்மூன்று","పదమూడు","ಹದಿಮೂರು"],
+n14:["Fourteen","चौदह","பதினான்கு","పద్నాలుగు","ಹದಿನಾಲ್ಕು"],
+n15:["Fifteen","पंद्रह","பதினைந்து","పదిహేను","ಹದಿನೈದು"],
+n16:["Sixteen","सोलह","பதினாறு","పదహారు","ಹದಿನಾರು"],
+n17:["Seventeen","सत्रह","பதினேழு","పదిహేడు","ಹದಿನೇಳು"],
+n18:["Eighteen","अठारह","பதினெட்டு","పద్దెనిమిది","ಹದಿನೆಂಟು"],
+n19:["Nineteen","उन्नीस","பத்தொன்பது","పంతొమ్మిది","ಹತ್ತೊಂಬತ್ತು"],
+n20:["Twenty","बीस","இருபது","ఇరవై","ಇಪ್ಪತ್ತು"]};
+/* lesson lines: [phrase, 1 = you speak]; game: string = character line, array = [right reply, funny wrong reply, character reaction] */
+const SCN={
+tea:{lines:[["t1",1],["t2",0],["t3",1],["t4",0],["t5",1]]},
+everyday:{lines:[["e1",0],["e2",0],["e3",0],["e4",0],["e5",0],["e6",0],["e7",0],["e8",0],["e9",0],["e10",0],["e11",0],["e12",0],["e13",0],["e14",0],["e15",0],["e16",0],["e17",0],["e18",0],["e19",0],["e20",0]]},
+numbers:{lines:[["n1",0],["n2",0],["n3",0],["n4",0],["n5",0],["n6",0],["n7",0],["n8",0],["n9",0],["n10",0]]},
+kitchen:{lines:[["k1",0],["k2",1],["k3",0],["k4",1],["k5",0],["k6",1],["k7",0],["k8",1]]},
+auto:{lines:[["a1",1],["a2",0],["a3",1],["a4",0],["a5",1],["a6",0],["a7",1],["a8",0]],game:[["a1","x1","x1r"],"a2",["a3"],"a4",["a5","x2","x2r"],"a6",["a7"],"a8"]},
+doctor:{lines:[["d1",0],["d2",1],["d3",0],["d4",1],["d5",0],["d6",1],["d7",0],["d8",1]],game:["d1",["d2","y1","y1r"],"d3",["d4"],"d5",["d6"],"d7",["d8","y2","y2r"]]},
+festival:{lines:[["f1",0],["f2",1],["f3",0],["f4",1],["f5",0],["f6",1],["f7",0],["f8",1]],game:["f1",["f2","z1","z1r"],"f3",["f4","z2","z2r"],"f5",["f6"],"f7",["f8"]]},
+market:{lines:[["m1",0],["m2",1],["m3",0],["m4",1],["m5",0],["m6",1]],game:["m1",["m2","w1","w1r"],"m3",["m4","w2","w2r"],"m5",["m6"]]}};
+SCN.tea.lines.push(["t6",0],["t7",1],["t8",0],["t9",1]);
+SCN.market.lines.push(["m7",0],["m8",1],["m9",0],["m10",1]);
+SCN.kitchen.lines.push(["k9",0],["k10",1],["k11",0],["k12",1]);
+SCN.auto.lines.push(["a9",1],["a10",0],["a11",1],["a12",0]);
+SCN.doctor.lines.push(["d9",0],["d10",1],["d11",0],["d12",1]);
+SCN.festival.lines.push(["f9",0],["f10",1],["f11",0],["f12",1]);
+SCN.everyday.lines.push(["e21",0],["e22",0],["e23",0],["e24",0],["e25",0],["e26",0],["e27",0],["e28",0],["e29",0],["e30",0]);
+SCN.tea.lines.push(["t10",0],["t11",1],["t12",0],["t13",1]);
+SCN.market.lines.push(["m11",0],["m12",1],["m13",0],["m14",1]);
+SCN.kitchen.lines.push(["k13",0],["k14",1],["k15",0],["k16",1]);
+SCN.auto.lines.push(["a13",1],["a14",0],["a15",1],["a16",0]);
+SCN.doctor.lines.push(["d13",0],["d14",1],["d15",0],["d16",1]);
+SCN.festival.lines.push(["f13",0],["f14",1],["f15",0],["f16",1]);
+SCN.numbers.lines.push(["n11",0],["n12",0],["n13",0],["n14",0],["n15",0],["n16",0],["n17",0],["n18",0],["n19",0],["n20",0]);
+const SCENES=[{id:"tea",label:"Neighbour tea"},{id:"market",label:"Vegetable market"},{id:"everyday",label:"Everyday words"},{id:"numbers",label:"Numbers 1 to 10"},{id:"kitchen",label:"Kitchen talk"},{id:"auto",label:"Auto fare"},{id:"doctor",label:"Doctor visit"},{id:"festival",label:"Festival invite"}];
+/* pronunciation helper: every Indian script maps onto the Devanagari layout, so one small routine covers all of them */
+const OFF={Hindi:0,Sanskrit:0,Marathi:0,Gujarati:0x180,Telugu:0x300,Kannada:0x380,Malayalam:0x400,Tamil:0x280};
+const CC={21:"k",22:"kh",23:"g",24:"gh",25:"ng",26:"ch",27:"chh",28:"j",29:"jh",30:"ny",31:"t",32:"th",33:"d",34:"dh",35:"n",36:"t",37:"th",38:"d",39:"dh",40:"n",41:"n",42:"p",43:"ph",44:"b",45:"bh",46:"m",47:"y",48:"r",49:"r",50:"l",51:"l",52:"zh",53:"v",54:"sh",55:"sh",56:"s",57:"h"};
+const VV={5:"a",6:"aa",7:"i",8:"ee",9:"u",10:"oo",11:"ru",14:"e",15:"e",16:"ai",18:"o",19:"o",20:"au"};
+const MM={62:"aa",63:"i",64:"ee",65:"u",66:"oo",67:"ru",70:"e",71:"e",72:"ai",74:"o",75:"o",76:"au"};
+const CHILLU={3450:"n",3451:"n",3452:"r",3453:"l",3454:"l",3455:"k"};
+function roman(s,lang){
+  const off=OFF[lang];if(off===undefined)return"";
+  const short=lang==="Hindi"||lang==="Marathi"||lang==="Gujarati";
+  let out="",w=[];
+  const flush=()=>{const n=w.length;
+    w.forEach((y,i)=>{let a=y.v===null?"a":y.v;
+      if(y.v===null&&short){const nx=w[i+1];
+        if(i===n-1&&i>0)a="";
+        else if(lang==="Hindi"&&i>0&&nx&&nx.v!==""&&!(i+1===n-1&&nx.v===null)&&w[i-1].v!=="")a=""}
+      out+=y.c+a;
+      if(y.n)out+=(i===n-1&&!short)?"m":(short&&i===n-1?"n":(/^[pbm]/.test(w[i+1]?.c||"")?"m":"n"));
+      if(y.h)out+="h"});w=[]};
+  for(const ch of s){const cp=ch.codePointAt(0);
+    if(CHILLU[cp]){w.push({c:CHILLU[cp],v:""});continue}
+    const d=cp-off;
+    if(d>=0x900&&d<0x980){const k=d-0x900;
+      if(k>=21&&k<=57)w.push({c:CC[k],v:null});
+      else if(MM[k]!==undefined&&w.length)w[w.length-1].v=MM[k];
+      else if(k===77&&w.length)w[w.length-1].v="";
+      else if(VV[k]!==undefined)w.push({c:"",v:VV[k]});
+      else if(k===2||k===1)w.length&&(w[w.length-1].n=1);
+      else if(k===3)w.length&&(w[w.length-1].h=1);
+      else if(k===100){flush();out+="."}
+      continue}
+    if(cp===0x200c||cp===0x200d)continue;
+    flush();out+=ch}
+  flush();return lang==="Tamil"?out.replace(/ngk/g,"ng"):out}
+const chat=document.getElementById("chat"),toastEl=document.getElementById("toast"),stage=document.getElementById("stage");
+let MT="Tamil",TG="Hindi",SC="tea",G=null,GENDER="f";
+try{const sv=JSON.parse(localStorage.getItem("bolo")||"{}");if(NAMES[sv.mt])MT=sv.mt;if(NAMES[sv.tg]&&sv.tg!==MT)TG=sv.tg;if(sv.g==="m"||sv.g==="f")GENDER=sv.g}catch(e){}
+function toast(m){toastEl.textContent=m;toastEl.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>toastEl.classList.remove("on"),4500)}
+let VOICES=[];function loadV(){try{VOICES=speechSynthesis.getVoices()}catch(e){}}
+loadV();try{speechSynthesis.addEventListener("voiceschanged",loadV)}catch(e){}
+const norm=x=>x.toLowerCase().replace("_","-");
+function findVoice(c){c=norm(c);const p=c.split("-")[0];return VOICES.find(v=>norm(v.lang)===c)||VOICES.find(v=>norm(v.lang).split("-")[0]===p)}
+function say(text,lang,slow){
+  if(!("speechSynthesis" in window)){toast("This browser cannot play speech. Try Chrome, Edge or Safari.");return}
+  loadV();const v=findVoice(VC[lang]);
+  if(!v&&VOICES.length)toast("No "+(lang==="Sanskrit"?"Hindi (used for Sanskrit)":lang)+" voice on this device. Add one in Text-to-speech or Language settings.");
+  try{speechSynthesis.cancel();setTimeout(()=>{const u=new SpeechSynthesisUtterance(text);u.lang=VC[lang];if(v)u.voice=v;u.rate=slow?.55:.85;u.onerror=()=>toast("The sound could not play here. Try a full browser tab.");speechSynthesis.speak(u)},80)}catch(e){toast("The sound could not play here.")}
+}
+function pick(box,items,cur,onPick,block){
+  box.innerHTML="";items.forEach(k=>{const id=k.id||k,b=document.createElement("button");b.className="tab";b.textContent=k.id?k.label+(k.soon?" (soon)":""):NAMES[k];
+   b.setAttribute("aria-pressed",id===cur);b.disabled=id===block||!!k.soon;b.onclick=()=>onPick(id);box.appendChild(b)});
+}
+const MAN=[["madam","sir"],["मैडम","साहब"],["மேடம்","சார்"],["మేడం","సార్"],["ಮೇಡಂ","ಸರ್"],["बना रही हूँ","बना रहा हूँ"],["बनाऊँगी","बनाऊँगा"],["बताऊँगी","बताऊँगा"],["दूँगी","दूँगा"],["खरीदोगी","खरीदोगे"],["करती हूँ","करता हूँ"]];
+const gx=t=>GENDER==="m"?MAN.reduce((x,a)=>x.split(a[0]).join(a[1]),t):t;
+const ph=id=>{const t=gx(P[id][L.indexOf(TG)]);return{t:t,r:roman(t,TG),m:gx(P[id][L.indexOf(MT)]),e:gx(P[id][0])}};
+function meaning(x){let h="";if(x.r)h+="<em>say: </em>"+x.r+"<br>";if(MT!=="English")h+=x.m+"<br>";if(TG!=="English"&&MT!=="English")h+="<em>English: "+x.e+"</em>";return h.replace(/<br>$/,"")}
+function bubble2(x,you,box){
+  const d=document.createElement("div");d.className="line"+(you?" you":"");d.tabIndex=0;d.setAttribute("role","button");
+  const t=document.createElement("div");t.className="txt";t.textContent=x.t;const sm=document.createElement("small");sm.innerHTML=meaning(x);t.appendChild(sm);
+  const ac=document.createElement("div");ac.className="act";
+  [["🔊","Play",0],["🐢","Play slowly",1]].forEach(a=>{const b=document.createElement("button");b.textContent=a[0];b.setAttribute("aria-label",a[1]);b.onclick=e=>{e.stopPropagation();say(x.t,TG,a[2])};ac.appendChild(b)});
+  const tg=()=>d.classList.toggle("open");d.onclick=tg;d.onkeydown=e=>{if(e.key==="Enter")tg()};
+  d.appendChild(t);d.appendChild(ac);box.appendChild(d);d.scrollIntoView({block:"nearest"});return d}
+function note(){document.getElementById("note").textContent=(TG==="English"?"Explained in "+MT+" only. ":MT==="English"?"Explained in English. ":"Explained in "+MT+" and English. ")+"Tap a line to open its meaning and pronunciation (approximate). 🔊 plays it, 🐢 plays it slowly."}
+const mdbox=document.getElementById("md");
+let MODE="learn",TIMER=null;
+const MODES=[["learn","📖 Learn"],["story","🎭 Story game"],["listen","🎧 Listen"],["speak","🎙️ Speak"],["memory","🧠 Memory"],["speed","⚡ Speed bazaar"],["trace","✍️ Trace letters"]];
+const pool=()=>SCN[SC].lines.map(l=>l[0]);
+const shuf=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+const mean=id=>gx(P[id][L.indexOf(MT)]);
+function btn(txt,fn,cls){const b=document.createElement("button");b.className=cls||"opt";b.textContent=txt;b.onclick=fn;return b}
+function end(msg,again){const d=document.createElement("div");d.className="line tip";d.textContent=msg;stage.innerHTML="";stage.appendChild(d);stage.appendChild(btn("↻ Play again",again))}
+function sim(a,b){const n=s=>s.toLowerCase().replace(/[\s.,!?।'’]/g,"");a=n(a);b=n(b);if(!a||!b)return 0;
+  const d=[];for(let i=0;i<=a.length;i++){d[i]=[i];for(let j=1;j<=b.length;j++)d[i][j]=i?0:j}
+  for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+  return 1-d[a.length][b.length]/Math.max(a.length,b.length)}
+function lesson(){chat.innerHTML="";SCN[SC].lines.forEach(l=>bubble2(ph(l[0]),l[1],chat))}
+function story(){const g=SCN[SC].game,G={i:0,oops:0};stage.innerHTML='<div id="rplog"></div><div id="opts" style="margin-top:12px"></div>';
+  const log=stage.querySelector("#rplog"),opts=stage.querySelector("#opts");
+  const next=()=>{opts.innerHTML="";let last=null;
+    while(G.i<g.length){const it=g[G.i];
+      if(typeof it==="string"){last=ph(it);bubble2(last,false,log);G.i++;continue}
+      if(last)say(last.t,TG,0);
+      shuf([[it[0],1],it[1]?[it[1],0]:null].filter(Boolean)).forEach(a=>{const x=ph(a[0]),b=document.createElement("button");b.className="opt";
+        b.innerHTML="<span></span><small>"+(x.r?x.r+"<br>":"")+(MT!=="English"?x.m:x.e)+"</small>";b.firstChild.textContent=x.t;
+        b.onclick=()=>{opts.innerHTML="";bubble2(x,true,log);
+          if(a[1]){G.i++;next()}else{G.oops++;bubble2(ph(it[2]),false,log);toast("😂 Oops! Pick the other one.");next()}};opts.appendChild(b)});
+      return}
+    const d=document.createElement("div");d.className="line tip";d.textContent="🎉 Deal done! Funny mistakes: "+G.oops;log.appendChild(d);opts.appendChild(btn("↻ Play again",story))};
+  next()}
+function listen(){const ids=shuf(pool()).slice(0,6);let r=0,sc=0;
+  const round=()=>{if(r>=ids.length)return end("🎧 You understood "+sc+" of "+ids.length+". "+(sc>=ids.length-1?"Superb ears!":"Play again to train your ears."),listen);
+    const id=ids[r],x=ph(id);stage.innerHTML='<p class="hint">Round '+(r+1)+" of "+ids.length+". Listen, then tap what it means.</p>";
+    const row=document.createElement("div");row.append(btn("🔊 Play",()=>say(x.t,TG,0),"btn"),btn(" 🐢 Slow",()=>say(x.t,TG,1),"btn"));row.style.cssText="display:flex;gap:10px;margin-bottom:10px";stage.appendChild(row);
+    shuf([id,...shuf(pool().filter(i=>i!==id)).slice(0,2)]).forEach(c=>{const o=btn(mean(c),()=>{
+      stage.querySelectorAll(".opt").forEach(z=>z.disabled=true);
+      if(c===id){sc++;o.classList.add("ok")}else{o.classList.add("bad");[...stage.querySelectorAll(".opt")].find(z=>z.textContent===mean(id)).classList.add("ok")}
+      const t=document.createElement("p");t.className="hint";t.textContent=x.t+(x.r?"  ("+x.r+")":"");stage.appendChild(t);r++;setTimeout(round,1600)});stage.appendChild(o)});
+    setTimeout(()=>say(x.t,TG,0),300)};round()}
+function memory(){const ids=shuf(pool()).slice(0,6);let open=[],found=0,tries=0;
+  stage.innerHTML='<p class="hint">Flip two cards: match each phrase with its meaning.</p><div class="mem"></div>';const g=stage.querySelector(".mem");
+  shuf(ids.flatMap(id=>[{id,k:0},{id,k:1}])).forEach(c=>{const b=document.createElement("button");b.className="card";b.textContent="❓";
+    b.onclick=()=>{if(b.classList.contains("up")||open.length>1)return;b.classList.add("up");b.textContent=c.k?mean(c.id):ph(c.id).t;if(!c.k)say(ph(c.id).t,TG,0);open.push([b,c]);
+      if(open.length===2){tries++;const [A,B]=open;
+        if(A[1].id===B[1].id&&A[1].k!==B[1].k){A[0].classList.add("done");B[0].classList.add("done");open=[];if(++found===ids.length)setTimeout(()=>end("🧠 All matched in "+tries+" tries!",memory),700)}
+        else setTimeout(()=>{open.forEach(o=>{o[0].classList.remove("up");o[0].textContent="❓"});open=[]},1000)}};g.appendChild(b)})}
+function speed(){let t=30,score=0,streak=0;stage.innerHTML='<div class="bar"><i></i></div><p class="hint" id="sp"></p><div id="spo"></div>';
+  const bar=stage.querySelector(".bar i"),sp=stage.querySelector("#sp"),so=stage.querySelector("#spo");
+  TIMER=setInterval(()=>{t-=.1;bar.style.width=Math.max(t,0)/30*100+"%";if(t<=0){clearInterval(TIMER);end("⚡ Bazaar closed! Score: "+score+(score>120?" 🏆 Market king!":""),speed)}},100);
+  const ask=()=>{const ids=pool(),id=ids[Math.random()*ids.length|0];sp.textContent="Customer says: “"+mean(id)+"”. What do you say?  Score "+score+(streak>1?"  🔥 x"+streak:"");so.innerHTML="";
+    shuf([id,...shuf(ids.filter(i=>i!==id)).slice(0,3)]).forEach(c=>so.appendChild(btn(ph(c).t,()=>{if(c===id){score+=10+streak*2;streak++}else{streak=0;t-=2;toast(["😅 Oops!","🙈 Wrong stall!","🤭 Nope!"][Math.random()*3|0])}ask()})))};ask()}
+function speak(){const ids=shuf(pool());let i=0;const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const show=()=>{const x=ph(ids[i]);stage.innerHTML="";bubble2(x,false,stage).classList.add("open");
+    const out=document.createElement("p");out.className="hint";out.textContent="Tap the mic and say the phrase.";
+    const row=document.createElement("div");row.style.cssText="display:flex;gap:10px;margin-top:10px";
+    row.append(btn("🎙️ Say it",()=>{if(!SR){toast("Speaking practice works in Chrome or Edge, with internet.");return}
+      const r=new SR();r.lang=VC[TG];r.interimResults=false;out.textContent="Listening…";
+      r.onresult=e=>{const h=e.results[0][0].transcript,s=sim(h,x.t);out.textContent="I heard: "+h+"  →  "+(s>.75?"🌟 Excellent!":s>.5?"👍 Close. Try once more.":"🙂 Listen again, then retry.");if(s<=.5)say(x.t,TG,1)};
+      r.onerror=()=>{out.textContent="Could not hear. Allow microphone access and try again."};try{r.start()}catch(e){}},"btn"),btn("Next phrase ›",()=>{i=(i+1)%ids.length;show()},"btn"));
+    stage.append(row,out)};show()}
+const LET={English:"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),Hindi:"अआइईउऊएऐओऔकखगघचजटतनपमरलवसह".split(""),Tamil:"அஆஇஈஉஊஎஏஐஒஓகஙசஞடணதநபமயரலவழளறன".split(""),Telugu:"అఆఇఈఉఊఎఏఐఒఓకఖగఘచజటతనపమయరలవశసహ".split(""),Kannada:"ಅಆಇಈಉಊಎಏಐಒಓಕಖಗಘಚಜಟತನಪಮಯರಲವಶಸಹ".split("")};
+function trace(){const set=LET[TG];let i=0;
+ const show=()=>{const ch=set[i%set.length];stage.innerHTML="";
+  const F='bold 230px "Noto Sans Devanagari","Noto Sans Tamil","Noto Sans Telugu","Noto Sans Kannada","DM Sans",sans-serif';
+  const c=document.createElement("canvas");c.width=c.height=320;c.className="trace";const x=c.getContext("2d");
+  const su=document.createElement("canvas");su.width=su.height=320;const sx=su.getContext("2d");
+  const out=document.createElement("p");out.className="hint";out.style.textAlign="center";out.textContent=TG+" letter "+(i%set.length+1)+" of "+set.length+". Trace the faint letter with your finger or mouse, then press Check.";
+  const guide=()=>{x.clearRect(0,0,320,320);x.fillStyle="rgba(246,227,196,.25)";x.font=F;x.textAlign="center";x.textBaseline="middle";x.fillText(ch,160,170);sx.clearRect(0,0,320,320)};
+  const mk=f=>{const o=document.createElement("canvas");o.width=o.height=320;const q=o.getContext("2d");q.font=F;q.textAlign="center";q.textBaseline="middle";q.fillStyle=q.strokeStyle="#000";f(q);return q.getImageData(0,0,320,320).data};
+  const check=()=>{const G=mk(q=>q.fillText(ch,160,170)),T=mk(q=>{q.lineWidth=40;q.lineJoin="round";q.strokeText(ch,160,170);q.fillText(ch,160,170)}),S=sx.getImageData(0,0,320,320).data;
+   let gc=0,cv=0,sc=0,sp=0;for(let p=3;p<G.length;p+=4){const g=G[p]>100,t=T[p]>100,s=S[p]>100;if(g){gc++;if(s)cv++}if(s){sc++;if(!t)sp++}}
+   const a=cv/(gc||1),b=sp/(sc||1),ok=a>.6&&b<.35;
+   out.textContent=!sc?"Draw over the letter first.":ok?"🌟 Beautiful! You traced it well.":a>.4?"👍 Good start. Cover the whole letter.":"🙂 Follow the faint letter more closely."};
+  let down=false,l=[0,0];
+  const pt=e=>{const r=c.getBoundingClientRect();return[(e.clientX-r.left)*320/(r.width||320),(e.clientY-r.top)*320/(r.height||320)]};
+  const seg=(q,col,a,b)=>{q.strokeStyle=col;q.lineWidth=22;q.lineCap="round";q.beginPath();q.moveTo(a[0],a[1]);q.lineTo(b[0],b[1]);q.stroke()};
+  c.onpointerdown=e=>{down=true;try{c.setPointerCapture(e.pointerId)}catch(z){}l=pt(e);const q=[l[0]+.1,l[1]];seg(x,"#f4b03d",l,q);seg(sx,"#000",l,q)};
+  c.onpointermove=e=>{if(!down)return;const p=pt(e);seg(x,"#f4b03d",l,p);seg(sx,"#000",l,p);l=p};
+  c.onpointerup=c.onpointercancel=()=>{down=false};
+  const row=document.createElement("div");row.style.cssText="display:flex;gap:8px;flex-wrap:wrap;justify-content:center";
+  row.append(btn("🔊 "+(roman(ch,TG)||ch),()=>say(ch,TG,1),"btn"),btn("✅ Check",check,"btn"),btn("↺ Clear",()=>{guide();out.textContent="Cleared. Try again."},"tab"),btn("Next letter ›",()=>{i++;show()},"tab"));
+  stage.append(row,c,out);guide()};show()}
+const RUN={learn:lesson,story,listen,speak,memory,speed,trace};
+function setMode(m){clearInterval(TIMER);try{speechSynthesis.cancel()}catch(e){}if(m==="story"&&!SCN[SC].game)m="learn";MODE=m;
+  [...mdbox.children].forEach(b=>b.setAttribute("aria-pressed",b.dataset.m===m));
+  chat.hidden=m!=="learn";stage.hidden=m==="learn";stage.innerHTML="";RUN[m]()}
+function render(){
+  const all=Object.keys(NAMES);
+  pick(document.getElementById("mt"),all,MT,k=>{MT=k;render()},TG);
+  pick(document.getElementById("tg"),all,TG,k=>{TG=k;render()},MT);
+  const gd=document.getElementById("gd");gd.innerHTML="";[["f","👩 Woman"],["m","👨 Man"]].forEach(g=>{const b=btn(g[1],()=>{GENDER=g[0];render()},"tab");b.setAttribute("aria-pressed",GENDER===g[0]);gd.appendChild(b)});
+  try{localStorage.setItem("bolo",JSON.stringify({mt:MT,tg:TG,g:GENDER}))}catch(e){}
+  pick(document.getElementById("sc"),SCENES,SC,k=>{SC=k;render()},null);
+  mdbox.innerHTML="";MODES.forEach(m=>{const b=btn(m[1],()=>setMode(m[0]),"tab");b.dataset.m=m[0];b.disabled=m[0]==="story"&&!SCN[SC].game;mdbox.appendChild(b)});
+  note();setMode(MODE)}
+render();
+const LANGS=[["English","English"],["हिन्दी","Hindi"],["தமிழ்","Tamil"],["తెలుగు","Telugu"],["ಕನ್ನಡ","Kannada"]];
+document.getElementById("langs").innerHTML=LANGS.map(l=>"<div>"+l[0]+"<small>"+l[1]+"</small></div>").join("");
+
+/* ---------- 3D street at dusk ---------- */
+const cv=document.getElementById("gl");
+const R=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+R.setPixelRatio(Math.min(devicePixelRatio,1.75));
+const S=new THREE.Scene();S.fog=new THREE.Fog(0x4a2036,18,110);
+const cam=new THREE.PerspectiveCamera(58,1,.1,400);
+function size(){R.setSize(innerWidth,innerHeight);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}
+addEventListener("resize",size);size();
+
+const sky=new THREE.Mesh(new THREE.SphereGeometry(300,32,16),new THREE.ShaderMaterial({side:THREE.BackSide,fog:false,depthWrite:false,
+ vertexShader:"varying vec3 p;void main(){p=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}",
+ fragmentShader:"varying vec3 p;void main(){float h=normalize(p).y;vec3 top=vec3(.09,.05,.16);vec3 mid=vec3(.55,.17,.25);vec3 low=vec3(.96,.55,.2);vec3 c=mix(low,mid,smoothstep(0.,.18,h));c=mix(c,top,smoothstep(.12,.65,h));gl_FragColor=vec4(c,1.);}"}));
+S.add(sky);
+
+const pts=[];for(let i=0;i<=12;i++)pts.push(new THREE.Vector3(Math.sin(i*.7)*9,0,-i*11));
+const path=new THREE.CatmullRomCurve3(pts);
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(500,500),new THREE.MeshStandardMaterial({color:0x2c1a26,roughness:1}));
+ground.rotation.x=-Math.PI/2;ground.position.y=-.01;S.add(ground);
+S.add(new THREE.HemisphereLight(0xffa86a,0x2a1636,.9));
+const sun=new THREE.DirectionalLight(0xff9a55,1.1);sun.position.set(0,6,-150);S.add(sun);
+const lamp=new THREE.PointLight(0xffb45a,1.3,22);S.add(lamp);
+
+function glowTex(){const c=document.createElement("canvas");c.width=c.height=128;const x=c.getContext("2d"),g=x.createRadialGradient(64,64,0,64,64,64);g.addColorStop(0,"rgba(255,220,150,1)");g.addColorStop(.3,"rgba(255,160,60,.45)");g.addColorStop(1,"rgba(255,120,40,0)");x.fillStyle=g;x.fillRect(0,0,128,128);return new THREE.CanvasTexture(c)}
+const GT=glowTex();
+const sunSpr=new THREE.Sprite(new THREE.SpriteMaterial({map:GT,fog:false,depthWrite:false,blending:THREE.AdditiveBlending}));
+sunSpr.scale.set(150,150,1);sunSpr.position.set(0,14,-200);S.add(sunSpr);
+
+const cols=[0xb9553a,0xd9953d,0x8a4a5f,0x5f7a52,0xc27a5a,0x7a4a38];
+const roadM=new THREE.MeshStandardMaterial({color:0x6b4331,roughness:1});
+for(let i=0;i<70;i++){const u=i/70,p=path.getPointAt(u),t=path.getTangentAt(u);
+ const r=new THREE.Mesh(new THREE.BoxGeometry(5,.04,2.3),roadM);r.position.copy(p);r.rotation.y=Math.atan2(t.x,t.z)+Math.PI/2;S.add(r)}
+const winM=new THREE.MeshBasicMaterial({color:0xffc062});
+const SIGNS=[["🏠","Neighbour"],["🍅","Veg store"],["🛒","Grocery"],["🚌","Bus stop"],["🍲","Kitchen"],["🛺","Auto"],["🩺","Clinic"],["🪔","Festival"]],STX={};
+function signTex(sg){if(STX[sg[1]])return STX[sg[1]];const c=document.createElement("canvas");c.width=512;c.height=160;const x=c.getContext("2d");x.fillStyle="#2a1230";x.fillRect(0,0,512,160);x.strokeStyle="#f4b03d";x.lineWidth=8;x.strokeRect(6,6,500,148);x.fillStyle="#f6e3c4";x.textBaseline="middle";x.font="64px sans-serif";x.fillText(sg[0],24,82);x.font="700 40px sans-serif";x.fillText(sg[1],108,80);return STX[sg[1]]=new THREE.CanvasTexture(c)}
+for(let i=0;i<34;i++){const u=.02+i/36;const p=path.getPointAt(u),t=path.getTangentAt(u);
+ const n=new THREE.Vector3(-t.z,0,t.x);
+ [-1,1].forEach(side=>{
+  const g=new THREE.Group(),h=2.6+Math.random()*2.2,c=cols[(Math.random()*cols.length)|0];
+  const b=new THREE.Mesh(new THREE.BoxGeometry(3.2,h,3.2),new THREE.MeshStandardMaterial({color:c,roughness:.9}));b.position.y=h/2;g.add(b);
+  const rf=new THREE.Mesh(new THREE.ConeGeometry(2.9,1.6,4),new THREE.MeshStandardMaterial({color:0x4b2430,roughness:1}));rf.position.y=h+.8;rf.rotation.y=Math.PI/4;g.add(rf);
+  if(i%4===0){const sg=SIGNS[(i/4|0)%8];const sp=new THREE.Mesh(new THREE.PlaneGeometry(2.7,.85),new THREE.MeshBasicMaterial({map:signTex(sg)}));sp.position.set(0,h-.35,1.62);g.add(sp);const dr=new THREE.Mesh(new THREE.PlaneGeometry(.9,1.7),winM);dr.position.set(0,.85,1.62);g.add(dr)}else for(let k=0;k<2;k++){const w=new THREE.Mesh(new THREE.PlaneGeometry(.7,.9),winM);w.position.set(-.8+k*1.6,h*.62,1.61);g.add(w)}
+  g.position.copy(p).addScaledVector(n,side*(6.2+Math.random()*2.5));g.lookAt(p.x,0,p.z);S.add(g);
+ });
+ if(i%2===0){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:GT,blending:THREE.AdditiveBlending,depthWrite:false}));s.scale.set(3,3,1);s.position.copy(p).addScaledVector(n,3.4*(i%4?1:-1));s.position.y=3.2+Math.random();S.add(s)}
+}
+
+/* floating speech bubbles with real scripts */
+const WORDS=["Hello","नमस्ते","வணக்கம்","నమస్కారం","ನಮಸ್ಕಾರ","നമസ്കാരം","नमो नमः","નમસ્તે","Chai?","चाय?","டீ?","ಚಹಾ?"];
+const bubbles=[];
+function bubble(txt){const c=document.createElement("canvas");c.width=512;c.height=256;const x=c.getContext("2d");
+ x.fillStyle="#f6e3c4";x.beginPath();x.roundRect?x.roundRect(8,8,496,190,60):x.rect(8,8,496,190);x.fill();
+ x.beginPath();x.moveTo(90,190);x.lineTo(70,248);x.lineTo(150,192);x.fill();
+ x.fillStyle="#2a1230";x.font='500 70px "Noto Sans Devanagari","Noto Sans Tamil","Noto Sans Telugu","Noto Sans Kannada","Noto Sans Malayalam","Noto Sans Gujarati","DM Sans",sans-serif';x.textAlign="center";x.textBaseline="middle";x.fillText(txt,256,105,440);
+ return new THREE.CanvasTexture(c)}
+async function makeBubbles(){
+ try{await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,1800))]);
+  await Promise.all(["Devanagari","Tamil","Telugu","Kannada","Malayalam","Gujarati"].map(f=>document.fonts.load('500 40px "Noto Sans '+f+'"',"अ")));}catch(e){}
+ WORDS.forEach((w,i)=>{const u=.06+i*.078,p=path.getPointAt(Math.min(u,.98)),t=path.getTangentAt(Math.min(u,.98));
+  const s=new THREE.Sprite(new THREE.SpriteMaterial({map:bubble(w),fog:false}));s.scale.set(4.4,2.2,1);
+  const n=new THREE.Vector3(-t.z,0,t.x);s.position.copy(p).addScaledVector(n,(i%2?1:-1)*3.2);s.position.y=4.2+(i%3)*.7;s.userData.y=s.position.y;bubbles.push(s);S.add(s)})}
+makeBubbles();
+const walkers=[];
+for(let i=0;i<5;i++){const g=new THREE.Group(),col=[0xb83a4a,0x2f7f6f,0xd9953d,0x7a4a9a,0xc2603a][i];
+ g.add(new THREE.Mesh(new THREE.CylinderGeometry(.28,.5,1.3,12),new THREE.MeshStandardMaterial({color:col})));g.children[0].position.y=.75;
+ const hd=new THREE.Mesh(new THREE.SphereGeometry(.22,14,12),new THREE.MeshStandardMaterial({color:0xb27850}));hd.position.y=1.65;
+ const hr=new THREE.Mesh(new THREE.SphereGeometry(.24,14,12),new THREE.MeshStandardMaterial({color:0x1a0e12}));hr.position.set(0,1.7,.04);g.add(hd,hr);
+ walkers.push({g,u0:.12+i*.17,off:(i%2?1:-1)*(1.2+Math.random())});S.add(g)}
+
+/* fireflies */
+const fg=new THREE.BufferGeometry(),fa=[];for(let i=0;i<260;i++){const p=path.getPointAt(Math.random());fa.push(p.x+(Math.random()-.5)*22,.5+Math.random()*7,p.z+(Math.random()-.5)*10)}
+fg.setAttribute("position",new THREE.Float32BufferAttribute(fa,3));
+const ff=new THREE.Points(fg,new THREE.PointsMaterial({map:GT,size:.9,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,color:0xffd27a}));S.add(ff);
+
+/* scroll-driven camera */
+let target=0,cur=0,mx=0,my=0;
+const rm=matchMedia("(prefers-reduced-motion:reduce)").matches;
+addEventListener("pointermove",e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
+const look=new THREE.Vector3(),pos=new THREE.Vector3();
+R.setAnimationLoop(t=>{if(window.WALKING)return;
+ const s=t/1000;cur+=(target-cur)*.06;
+ const u=Math.min(cur*.96+.01,.97);
+ path.getPointAt(u,pos);path.getPointAt(Math.min(u+.035,1),look);
+ cam.position.set(pos.x+mx*1.2,2.1+Math.sin(s*.8)*.05-my*.5,pos.z);
+ look.y=2.3+Math.sin(cur*Math.PI*2)*.5;cam.lookAt(look);
+ cam.rotation.z=Math.sin(cur*12)*.01;
+ lamp.position.copy(cam.position);lamp.position.y+=1;
+ bubbles.forEach((b,i)=>b.position.y=b.userData.y+Math.sin(s*1.2+i)*.25);
+ ff.position.y=Math.sin(s*.5)*.3;
+ walkers.forEach((w,i)=>{const u=(w.u0+s*.0035)%.94;path.getPointAt(u,pos);w.g.position.set(pos.x+w.off,Math.abs(Math.sin(s*6+i))*.04,pos.z);w.g.rotation.y=Math.sin(s+i)*.1});path.getPointAt(Math.min(cur*.96+.01,.97),pos);
+ R.render(S,cam);
+});
+
+/* page animation */
+if(window.gsap&&window.ScrollTrigger&&!rm){
+ gsap.registerPlugin(ScrollTrigger);
+ ScrollTrigger.create({start:0,end:"max",onUpdate:s=>{target=s.progress;document.getElementById("cue").style.opacity=s.progress>.03?0:.8}});
+ gsap.from("header,.hero .lead,.hero .btn",{opacity:0,y:30,duration:1.4,delay:.6,stagger:.2,ease:"power3.out"});
+ gsap.from("#h1",{opacity:0,y:60,duration:1.8,ease:"power4.out"});
+ gsap.utils.toArray(".rv").forEach(el=>gsap.from(el,{y:40,opacity:0,duration:1,ease:"power3.out",scrollTrigger:{trigger:el,start:"top 88%"}}));
+}else{
+ addEventListener("scroll",()=>{target=scrollY/(document.body.scrollHeight-innerHeight)});
+}
+</script>
+<script>
+/* Optional street walk: arrow keys / WASD, touch joystick, women who greet you, shops that open the practice scenes */
+(function(){
+const $=id=>document.getElementById(id);
+const wrap=$("walk"),cv2=$("wc"),prm=$("wprompt"),dlg=$("npc"),shopbox=$("shopbox"),cnt=$("wcount");
+const panel=document.querySelector("#talk .panel"),home=panel.parentNode;
+let R2,S2,cam2,raf=0,last=0,P={x:0,z:3,yaw:0},keys={},joy={x:0,y:0},npcs=[],near=null,busy=false,inShop=false,spawnT=2,count=0,lastPair=-1,mode="tap",greet=true,bob=0;
+SCN.everyday.pairs=[["e1","e1"],["e9","e10"],["e16","e3"],["e20","e15"],["e19","e6"]];
+const SH=[["tea","🏠","Neighbour’s house",0xc27a5a],["market","🍅","Vegetable store",0x6f8f5a],["everyday","🛒","Grocery mall",0xd9953d],["numbers","🚌","Bus stop & tickets",0x8a4a5f],["kitchen","🍲","Kitchen talk",0x6a5a5a],["auto","🛺","Auto stand",0x6a5a5a],["doctor","🩺","Clinic",0x6a5a5a],["festival","🪔","Festival hall",0x6a5a5a]];
+function pairsAll(){const o=[];for(const k in SCN){const S=SCN[k];if(S.pairs)o.push(...S.pairs);else{const l=S.lines;for(let i=0;i<l.length-1;i++)if(l[i][1]===0&&l[i+1][1]===1)o.push([l[i][0],l[i+1][0]])}}return o}
+function sign(e,n,soon){const c=document.createElement("canvas");c.width=512;c.height=160;const x=c.getContext("2d");x.fillStyle=soon?"#4a3a44":"#2a1230";x.fillRect(0,0,512,160);x.strokeStyle="#f4b03d";x.lineWidth=8;x.strokeRect(6,6,500,148);x.fillStyle="#f6e3c4";x.textBaseline="middle";x.font="64px sans-serif";x.fillText(e,24,82);x.font="700 36px sans-serif";x.fillText(n,108,soon?62:80);if(soon){x.font="26px sans-serif";x.fillStyle="#f4b03d";x.fillText("opening soon",110,112)}return new THREE.CanvasTexture(c)}
+function build(){
+  S2=new THREE.Scene();S2.background=new THREE.Color(0x6a2a3a);S2.fog=new THREE.Fog(0x6a2a3a,14,75);
+  S2.add(new THREE.HemisphereLight(0xffb27a,0x2a1636,1.1));const d=new THREE.DirectionalLight(0xffa060,.9);d.position.set(0,8,-30);S2.add(d);
+  const g=new THREE.Mesh(new THREE.PlaneGeometry(200,260),new THREE.MeshStandardMaterial({color:0x2c1a26,roughness:1}));g.rotation.x=-Math.PI/2;g.position.z=-60;S2.add(g);
+  const rd=new THREE.Mesh(new THREE.PlaneGeometry(10,130),new THREE.MeshStandardMaterial({color:0x6b4331,roughness:1}));rd.rotation.x=-Math.PI/2;rd.position.set(0,.01,-60);S2.add(rd);
+  SH.forEach((s,i)=>{const side=i%2?1:-1,z=-14-Math.floor(i/2)*22,soon=!SCN[s[0]],gr=new THREE.Group();
+    const b=new THREE.Mesh(new THREE.BoxGeometry(7,6,8),new THREE.MeshStandardMaterial({color:s[3],roughness:.9}));b.position.y=3;
+    const rf=new THREE.Mesh(new THREE.ConeGeometry(6,2,4),new THREE.MeshStandardMaterial({color:0x4b2430}));rf.position.y=7;rf.rotation.y=Math.PI/4;
+    const f=-side*3.52,ry=side<0?Math.PI/2:-Math.PI/2;
+    const door=new THREE.Mesh(new THREE.PlaneGeometry(1.8,3),new THREE.MeshBasicMaterial({color:soon?0x5a4a52:0xffc062}));door.position.set(f,1.5,0);door.rotation.y=ry;
+    const sg=new THREE.Mesh(new THREE.PlaneGeometry(5.2,1.6),new THREE.MeshBasicMaterial({map:sign(s[1],s[2],soon)}));sg.position.set(f,4.7,0);sg.rotation.y=ry;
+    gr.add(b,rf,door,sg);gr.position.set(side*10.5,0,z);S2.add(gr);s.door={x:side*7,z:z}});
+  for(let z=-4;z>-110;z-=14)[-5.3,5.3].forEach(x=>{const p=new THREE.Mesh(new THREE.CylinderGeometry(.07,.09,3.4,6),new THREE.MeshStandardMaterial({color:0x2a1a1a}));p.position.set(x,1.7,z);S2.add(p);
+    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:GT,blending:THREE.AdditiveBlending,depthWrite:false}));sp.scale.set(3.5,3.5,1);sp.position.set(x,3.5,z);S2.add(sp)});
+  cam2=new THREE.PerspectiveCamera(65,1,.1,200);
+}
+function mkNPC(){const g=new THREE.Group(),c=[0xb83a4a,0x2f7f6f,0xd9953d,0x7a4a9a][Math.random()*4|0];
+  const body=new THREE.Mesh(new THREE.CylinderGeometry(.28,.5,1.3,12),new THREE.MeshStandardMaterial({color:c}));body.position.y=.75;
+  const head=new THREE.Mesh(new THREE.SphereGeometry(.22,14,12),new THREE.MeshStandardMaterial({color:0xb27850}));head.position.y=1.65;
+  const hair=new THREE.Mesh(new THREE.SphereGeometry(.24,14,12),new THREE.MeshStandardMaterial({color:0x1a0e12}));hair.position.set(0,1.7,-.04);
+  g.add(body,head,hair);return g}
+function spawn(){const dir=P.z>-70?1:-1,z=Math.max(-112,Math.min(10,P.z-dir*26)),g=mkNPC();g.position.set((Math.random()-.5)*7,0,z);S2.add(g);npcs.push({g,st:"walk",t:0})}
+function shown(){return !wrap.hidden}
+function dialog(n){
+  const pr=pairsAll();if(!pr.length){n.st="leave";return}let i;do{i=Math.random()*pr.length|0}while(i===lastPair&&pr.length>1);lastPair=i;
+  const a=pr[i][0],b=pr[i][1],A=ph(a),B=ph(b);busy=true;n.st="talk";
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:bubble(A.t),fog:false}));sp.scale.set(2.6,1.3,1);sp.position.y=2.9;n.g.add(sp);n.sp=sp;
+  dlg.hidden=false;dlg.innerHTML="";const h=document.createElement("p");h.className="hint";h.textContent="👩 She greets you. Reply in "+TG+".";dlg.appendChild(h);
+  bubble2(A,false,dlg).classList.add("open");setTimeout(()=>say(A.t,TG,0),250);
+  const tabs=document.createElement("div");tabs.className="tabs";tabs.style.marginTop="12px";
+  const area=document.createElement("div");
+  const fin=ok=>{area.innerHTML="";const m=document.createElement("p");m.className="hint";m.style.fontSize="16px";m.textContent=(ok?"🌟 Lovely! ":"🙂 Almost. ")+"A good reply: "+B.t+(B.r?"  ("+B.r+")":"");area.appendChild(m);if(ok)count++;cnt.textContent="Chats: "+count;
+    say(B.t,TG,0);area.appendChild(btn("Walk on ›",()=>{dlg.hidden=true;busy=false;n.g.remove(n.sp);n.sp=null;n.st="leave"},"btn"))};
+  const show=()=>{area.innerHTML="";[...tabs.children].forEach(t=>t.setAttribute("aria-pressed",t.dataset.m===mode));
+    if(mode==="tap"){const rep=[...new Set(pr.map(p=>p[1]))].filter(x=>x!==b);
+      shuf([b,...shuf(rep).slice(0,2)]).forEach(c=>{const x=ph(c),o=document.createElement("button");o.className="opt";o.innerHTML="<span></span><small>"+(x.r?x.r+"<br>":"")+(MT!=="English"?x.m:x.e)+"</small>";o.firstChild.textContent=x.t;o.onclick=()=>fin(c===b);area.appendChild(o)});return}
+    const q=document.createElement("p");q.className="hint";q.style.fontSize="16px";q.textContent="Reply with: “"+mean(b)+"”";area.appendChild(q);
+    const hint=document.createElement("p");hint.className="hint";const row=document.createElement("div");row.style.cssText="display:flex;gap:8px;flex-wrap:wrap";
+    row.appendChild(btn("💡 Hint",()=>{hint.textContent=B.t+(B.r?"  ("+B.r+")":"")},"tab"));
+    if(mode==="speak"){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+      row.appendChild(btn("🎙️ Say it",()=>{if(!SR){toast("Speaking works in Chrome or Edge with internet.");return}const r=new SR();r.lang=VC[TG];hint.textContent="Listening…";
+        r.onresult=e=>{const t=e.results[0][0].transcript;hint.textContent="I heard: "+t;fin(sim(t,B.t)>.6)};r.onerror=()=>{hint.textContent="Could not hear. Allow the microphone and retry."};try{r.start()}catch(x){}},"btn"))}
+    else{const inp=document.createElement("input");inp.placeholder="Type your reply (letters of any kind)";inp.style.cssText="flex:1;min-width:160px;border-radius:30px;border:0;padding:10px 16px;font:500 16px sans-serif";inp.onkeydown=e=>{e.stopPropagation();if(e.key==="Enter")go.click()};
+      const go=btn("Check",()=>{const t=inp.value.trim();if(t)fin(Math.max(sim(t,B.t),sim(t,B.r||B.t))>.6)},"btn");row.append(inp,go)}
+    area.append(row,hint)};
+  [["tap","👆 Tap"],["speak","🎙️ Speak"],["write","⌨️ Write"]].forEach(m=>{const t=btn(m[1],()=>{mode=m[0];show()},"tab");t.dataset.m=m[0];tabs.appendChild(t)});
+  dlg.append(tabs,area);show()}
+function enter(i){const s=SH[i];if(!SCN[s[0]])return;inShop=true;SC=s[0];MODE="learn";shopbox.hidden=false;shopbox.appendChild(panel);panel.style.opacity=1;panel.style.transform="none";render()}
+function leave(){inShop=false;shopbox.hidden=true;home.appendChild(panel);try{speechSynthesis.cancel()}catch(e){}clearInterval(TIMER)}
+function loop(t){raf=requestAnimationFrame(loop);const dt=Math.min((t-last)/1000||0,.05);last=t;
+  if(!inShop){
+    if(!busy){const f=(keys.ArrowUp||keys.w?1:0)-(keys.ArrowDown||keys.s?1:0)+joy.y,tr=(keys.ArrowLeft||keys.a?1:0)-(keys.ArrowRight||keys.d?1:0)-joy.x;
+      P.yaw+=tr*1.9*dt;P.x=Math.max(-6,Math.min(6,P.x-Math.sin(P.yaw)*f*6*dt));P.z=Math.max(-118,Math.min(10,P.z-Math.cos(P.yaw)*f*6*dt));bob+=Math.abs(f)*dt*9}
+    cam2.position.set(P.x,1.65+Math.sin(bob)*.05,P.z);cam2.rotation.y=P.yaw;
+    near=null;if(!busy)SH.forEach((s,i)=>{if(Math.hypot(P.x-s.door.x,P.z-s.door.z)<5)near=i});
+    prm.hidden=near===null||busy;if(near!==null){const s=SH[near],ok=!!SCN[s[0]];prm.textContent=ok?"🚪 Enter "+s[2]:s[2]+": opening soon";prm.disabled=!ok}
+    spawnT-=dt;if(greet&&spawnT<=0&&!busy&&!npcs.some(n=>n.st==="walk")){spawn();spawnT=12}
+    npcs.forEach(n=>{n.t+=dt;const g=n.g,dx=P.x-g.position.x,dz=P.z-g.position.z,dd=Math.hypot(dx,dz);
+      if(n.st==="walk"){g.position.x+=dx/dd*1.7*dt;g.position.z+=dz/dd*1.7*dt;g.children[0].position.y=.75+Math.abs(Math.sin(n.t*7))*.05;if(dd<4.2&&!busy)dialog(n)}
+      else if(n.st==="leave"){g.position.x+=(dx>0?-1:1)*dt*.6;g.position.z-=dz/dd*1.7*dt;if(dd>34){S2.remove(g);n.dead=1}}
+      if(n.st!=="leave")g.rotation.y=Math.atan2(dx,dz)});
+    npcs=npcs.filter(n=>!n.dead)}
+  R2.render(S2,cam2)}
+function size(){if(!R2)return;R2.setSize(innerWidth,innerHeight);cam2.aspect=innerWidth/innerHeight;cam2.updateProjectionMatrix()}
+function open(){if(!R2){R2=new THREE.WebGLRenderer({canvas:cv2,antialias:true});R2.setPixelRatio(Math.min(devicePixelRatio,1.75));build()}
+  window.WALKING=true;wrap.hidden=false;document.body.style.overflow="hidden";P={x:0,z:3,yaw:0};busy=false;spawnT=2;size();last=performance.now();loop(last);toast("Walk with arrow keys or WASD. On phones use the joystick. Press E at a door.")}
+function close(){if(inShop)leave();dlg.hidden=true;busy=false;cancelAnimationFrame(raf);window.WALKING=false;wrap.hidden=true;document.body.style.overflow="";npcs.forEach(n=>S2.remove(n.g));npcs=[]}
+$("walkbtn").onclick=open;$("wexit").onclick=close;$("wback").onclick=leave;$("wgreet").onclick=e=>{greet=!greet;e.target.textContent="👩 Greetings: "+(greet?"on":"off")};
+prm.onclick=()=>{if(near!==null)enter(near)};
+addEventListener("resize",size);
+addEventListener("keydown",e=>{if(!shown()||e.target.tagName==="INPUT")return;const k=e.key.length===1?e.key.toLowerCase():e.key;keys[k]=1;
+  if(k==="e"||k==="Enter"){if(near!==null&&!busy&&!inShop)enter(near)}if(k==="Escape")inShop?leave():close();if(k.startsWith("Arrow"))e.preventDefault()});
+addEventListener("keyup",e=>{const k=e.key.length===1?e.key.toLowerCase():e.key;keys[k]=0});
+const jy=$("joy"),kn=jy.firstChild;
+const mv=e=>{const r=jy.getBoundingClientRect(),dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2,m=Math.min(1,Math.hypot(dx,dy)/45),a=Math.atan2(dy,dx);
+  joy.x=Math.cos(a)*m;joy.y=-Math.sin(a)*m;kn.style.transform="translate("+joy.x*40+"px,"+(-joy.y*40)+"px)"};
+jy.onpointerdown=e=>{jy.setPointerCapture(e.pointerId);mv(e)};jy.onpointermove=e=>{if(e.buttons||e.pressure)mv(e)};
+jy.onpointerup=jy.onpointercancel=()=>{joy={x:0,y:0};kn.style.transform=""};
+window.__walk={dialog,spawn,npcs:()=>npcs,enter,open};
+})();
+</script>
+<script>if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0)navigator.serviceWorker.register("sw.js").catch(function(){});</script>
+</body>
+</html>
